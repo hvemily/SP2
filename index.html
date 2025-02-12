@@ -1,32 +1,110 @@
 <!DOCTYPE html>
 <html lang="no">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verite Auctions</title>
-  <link href="./src/css/style.css" rel="stylesheet">
-</head>
-<header class="bg-gray-200 text-gray-800 p-4 shadow-md">
-  <div class="container mx-auto flex justify-between items-center">
-    <!-- Logo -->
-    <div class="text-3xl font-bold text-gray-900">
-      <span class="text-gray-700">V</span><span class="text-blue-500">A</span>
-    </div>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verite Auctions</title>
+    
 
-    <!-- Navbar and Search -->
-    <div class="flex items-center space-x-6">
-      <!-- Search Bar -->
-      <input type="text" placeholder="Search listings" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
 
-      <!-- Navbar links -->
-      <nav class="space-x-6">
-        <a href="#" class="text-gray-700 hover:text-blue-500">Sell with us</a>
-        <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-400">Login</a>
-      </nav>
-    </div>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+
+  
+
+    <link href="./src/css/style.css" rel="stylesheet">
+  </head>
+  
+  
+  <body class="font-[Inter] bg-gray-100">
+    <header class="bg-black text-gray-800 p-4 shadow-md relative">
+      <div class="container mx-auto flex justify-between items-center relative">
+        <!-- Logo -->
+        <div class="logo text-shadow-custom">
+          <img src="/src/assets/icons/va-logo2.png" alt="verite auctions logo" class="w-12 h-12 drop-shadow-lg">
+        </div>
+    
+        <h1 class="text-4xl text-customGray font-[Crimson-text] absolute left-1/2 transform -translate-x-1/2 drop-shadow-lg">
+          Vérité Auctions
+        </h1>
+    
+        <div class="flex items-center space-x-6 flex-grow justify-end">
+          <nav class="space-x-6 flex items-center">
+            <a href="#" class="text-customGray hover:text-white font-bold hover:scale-105">Sell with us</a>
+            <a href="#" class="bg-customGray text-black px-4 py-2 rounded-full font-bold transition-all duration-200 
+            hover:bg-black hover:text-customGray hover:scale-105 hover:border">Login</a>
+        </nav>        
+        </div>
+      </div>
+    
+<!-- Secondary Navbar -->
+<!-- Secondary Navbar -->
+<nav class="text-gray-800 p-3 mt-2 w-full sticky top-0 z-50">
+  <div class="flex justify-center space-x-6">
+    <a href="category.html?category=Art" class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white">Art</a>
+    <a href="category.html?category=Collectibles" class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white">Collectibles & Memorabilia</a>
+    <a href="category.html?category=Fashion" class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white">Fashion</a>
+    <a href="category.html?category=Jewelry" class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white">Jewelry</a>
+    <a href="category.html?category=Vintage" class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white">Vintage</a>
+    <a href="category.html?category=Watches" class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white">Watches</a>
   </div>
-</header>
+</nav>
 
+
+
+
+
+<!-- Search Bar -->
+<div class="flex justify-center mt-4">
+  <input 
+    id="searchInput" 
+    type="text" 
+    placeholder="Search listings"
+    class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-customBlue w-full max-w-lg"
+  >
+</div>
+
+    </header>
+    <main>
+      <h2 class="font-[Crimson] text-black font-semibold text-2xl text-center mt-8">
+        Latest Listings
+      </h2>
+
+      <section id="auction-listings" class="container mx-auto mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      </section>
+
+      <section class="mt-12 text-center">
+        <h3 class="font-[crimson] text-2xl font-semibold text-customBlue mb-6">Featured Bids</h3>
+        <div id="featured-auctions" class="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
+        </div>        
+      </section>
+      
+
+      <section class="mt-12 text-center bg-customGray p-8 rounded-lg">
+        <h3 class="font-[crimson] text-2xl font-bold text-customBlue mb-6">Why Choose Vérité Auctions?</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h4 class="font-[crimson] text-customBlue text-xl font-semibold">Verified Sellers</h4>
+            <p class="text-gray-600">We ensure all listings are authentic and sellers are verified.</p>
+          </div>
+          <div>
+            <h4 class="font-[crimson] text-customBlue text-xl font-semibold">Secure Bidding</h4>
+            <p class="text-gray-600">Bid with confidence knowing your information is safe.</p>
+          </div>
+          <div>
+            <h4 class="font-[crimson] text-customBlue text-xl font-semibold">Worldwide Shipping</h4>
+            <p class="text-gray-600">We offer international shipping on all auctioned items.</p>
+          </div>
+        </div>
+      </section>
+      
+      
+      
+    </main>
+    
     <div id="app"></div>
     <script type="module" src="/src/app.js"></script>
   </body>

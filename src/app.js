@@ -1,22 +1,10 @@
-import '../src/css/style.css'
+import '../src/css/style.css';
 
+// Håndter ruter dynamisk basert på hvilken side brukeren er på
+const currentPath = window.location.pathname;
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
-
-setupCounter(document.querySelector('#counter'))
+if (currentPath.includes("index.html") || currentPath === "/") {
+    import("./js/router/views/home.js");
+} else if (currentPath.includes("category.html")) {
+    import("./js/category.js");
+}
