@@ -1,5 +1,7 @@
 import '../src/css/style.css';
 
+import '../src/js/router/views/home.js'
+
 // Håndter ruter dynamisk basert på hvilken side brukeren er på
 const currentPath = window.location.pathname;
 
