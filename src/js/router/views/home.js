@@ -1,5 +1,30 @@
-import { fetchListings } from "../../api/post/read";
-import { fetchFeaturedBids } from "../../api/post/read";
+import { fetchListings, fetchFeaturedBids } from "../../api/post/read";
+
+document.addEventListener("DOMContentLoaded", async () => {
+    console.log("🚀 Fetching fresh listings...");
+    try {
+        const listings = await fetchListings();
+        console.log("✅ Listings fetched:", listings);
+        if (!listings || listings.length === 0) {
+            console.warn("⚠️ No listings found!");
+        }
+        await renderListings(listings);
+    } catch (error) {
+        console.error("❌ Error rendering listings:", error);
+    }
+
+    try {
+        const featuredBids = await fetchFeaturedBids();
+        console.log("✅ Featured bids fetched:", featuredBids);
+        if (!featuredBids || featuredBids.length === 0) {
+            console.warn("⚠️ No featured bids found!");
+        }
+        await renderFeaturedBids(featuredBids);
+    } catch (error) {
+        console.error("❌ Error rendering featured bids:", error);
+    }
+});
+
 
 const placeholderImage = "/src/assets/icons/v-black.png"; // Definer placeholder-bildet her
 const searchInput = document.getElementById("searchInput");
@@ -30,9 +55,9 @@ async function renderListings(listingsData = null) {
             console.log("Seller Data:", listing.seller);
 
             // Hent høyeste bud
-            const highestBid = listing.bids && listing.bids.length > 0 
-            ? `${Math.max(...listing.bids.map(bid => bid.amount))} ${Math.max(...listing.bids.map(bid => bid.amount)) === 1 ? "credit" : "credits"}` 
-            : "No bids yet";
+            const highestBid = listing.bids && listing.bids.length > 0
+                ? `${Math.max(...listing.bids.map(bid => bid.amount))} ${Math.max(...listing.bids.map(bid => bid.amount)) === 1 ? "credit" : "credits"}`
+                : "No bids yet";
 
             // Hent selgerens navn
             const sellerName = listing.seller?.name || listing.seller?.username || "Unknown Seller";
@@ -47,13 +72,13 @@ async function renderListings(listingsData = null) {
                 const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                
+
                 timeLeftString = `${days}d ${hours}h ${minutes}m left`;
             }
 
             // Sett riktig bilde
             const imageSrc = listing.media?.[0]?.url || listing.media?.[0] || placeholderImage;
-            const isPlaceholder = imageSrc === placeholderImage; 
+            const isPlaceholder = imageSrc === placeholderImage;
             const imageClass = isPlaceholder ? "w-[50%] h-auto object-contain" : "w-full h-full object-cover";
 
             return `
@@ -124,8 +149,8 @@ async function renderFeaturedBids() {
         .map(listing => {
             console.log("Featured Listing:", listing);
 
-            const highestBid = listing.bids?.length 
-                ? `${Math.max(...listing.bids.map(bid => bid.amount))} credits` 
+            const highestBid = listing.bids?.length
+                ? `${Math.max(...listing.bids.map(bid => bid.amount))} credits`
                 : "No bids yet";
 
             // Hent riktig bilde (samme logikk som i renderListings)
@@ -211,7 +236,28 @@ searchInput.addEventListener("keydown", handleSearch);
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("Fetching fresh listings...");
-    await renderListings();
-    await renderFeaturedBids();
-  });
+    console.log("🚀 Fetching fresh listings...");
+    try {
+        const listings = await fetchListings();
+        console.log("✅ Listings fetched:", listings);
+        if (!listings || listings.length === 0) {
+            console.warn("⚠️ No listings found!");
+        }
+        await renderListings(listings);
+    } catch (error) {
+        console.error("❌ Error rendering listings:", error);
+    }
+
+    try {
+        const featuredBids = await fetchFeaturedBids();
+        console.log("✅ Featured bids fetched:", featuredBids);
+        if (!featuredBids || featuredBids.length === 0) {
+            console.warn("⚠️ No featured bids found!");
+        }
+        await renderFeaturedBids(featuredBids);
+    } catch (error) {
+        console.error("❌ Error rendering featured bids:", error);
+    }
+});
+
+
