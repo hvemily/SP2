@@ -1,6 +1,5 @@
 import { API_LISTINGS } from "../constants.js";
 
-// 🚀 Hent siste opprettede annonser med fallback-sortering
 export async function fetchListings(limit = 8, page = 1) {
     console.log(`🚀 Fetching listings: limit=${limit}, page=${page}`);
 
@@ -23,23 +22,18 @@ export async function fetchListings(limit = 8, page = 1) {
         const responseData = await response.json();
         console.log("📦 Full API response:", responseData);
 
-        if (!Array.isArray(responseData.data)) {
+        if (Array.isArray(responseData.data)) {
+            // 🚨 Manuell sortering i tilfelle API-et ikke returnerer riktig
+            return responseData.data.sort((a, b) => new Date(b.created) - new Date(a.created));
+        } else {
             console.error("❌ Unexpected API response format:", responseData);
             return [];
         }
-
-        // 🚨 Manuell sortering i tilfelle API-et ikke returnerer riktig
-        const sortedListings = responseData.data.sort((a, b) => new Date(b.created) - new Date(a.created));
-        console.log("✅ Manually sorted listings:", sortedListings);
-
-        return sortedListings;
     } catch (error) {
         console.error("❌ Error fetching listings:", error);
         return [];
     }
 }
-
-
 
 
 // 🚀 Hent annonser med de høyeste budene (Featured Bids)

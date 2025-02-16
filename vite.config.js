@@ -1,21 +1,16 @@
-import { defineConfig } from "vite";
-import path from "path";
+// vite.config.js
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   server: {
-    port: 5173, // Endre hvis du vil bruke en annen port
-    open: true, // Åpner nettleseren automatisk ved oppstart
+    port: 5173, // Standardporten for Vite
+    open: true, // Åpner automatisk i nettleseren ved oppstart
     proxy: {
-      "/api": {
-        target: "https://v2.api.noroff.dev", // Erstatt med riktig API-URL om nødvendig
+      '/api': {
+        target: 'http://localhost:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
-    },
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"), // Nå kan du bruke "@/js/router/views/home.js"
-    },
-  },
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
 });

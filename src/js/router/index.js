@@ -26,44 +26,44 @@ export default async function router(pathname = window.location.pathname) {
         .catch((error) => console.error("❌ Failed to import home.js:", error));
 
       break;
-    case "/auth/login":
+    case "/auth/login.js":
       import("../router/views/login")
         .then((module) => module.default())
         .catch((error) => console.error("Failed to import login.js:", error));
       break;
-    case "/auth/register":
+    case "/auth/register.js":
       import("../router/views/register")
         .then((module) => module.default())
         .catch((error) => console.error("Failed to import register.js:", error));
       break;
-    case "/profile":
+    case "/profile.js":
       import("../router/views/profile")
         .then((module) => module.default())
         .catch((error) => console.error("Failed to import profile.js:", error));
       break;
-    case "/listings":
+    case "/listings.js":
       import("../router/views/post")
         .then((module) => module.default())
         .catch((error) => console.error("Failed to import listings.js:", error));
       break;
-    case "/listings/create":
+    case "/listings/create.js":
       import("../router/views/postCreate")
         .then((module) => module.default())
         .catch((error) => console.error("Failed to import create.js:", error));
       break;
-    case "/listings/edit":
+    case "/listings/edit.js":
       const listingId = new URLSearchParams(window.location.search).get("id");
       if (listingId) {
-        import("../router/views/postEdit")
+        import("../router/views/postEdit.js")
           .then((module) => module.editListing(listingId))
           .catch((error) => console.error("Failed to import edit.js:", error));
       } else {
-        import("../router/views/notFound")
+        import("../router/views/notFound.js")
           .catch((error) => console.error("Failed to load notFound.js:", error));
       }
       break;
     default:
-      import("../router/views/notFound")
+      import("../router/views/notFound.js")
         .catch((error) => console.error("Failed to load notFound.js:", error));
   }
 }
