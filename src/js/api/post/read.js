@@ -1,28 +1,40 @@
-const API_BASE_URL = "https://v2.api.noroff.dev/auction/listings";
+import { API_LISTINGS } from "../constants.js";
 
+// 🚀 Hent siste opprettede annonser med fallback-sortering
 export async function fetchListings(limit = 8, page = 1) {
     try {
-        const response = await fetch(`${API_BASE_URL}?_seller=true&_bids=true&_active=true&_page=${page}&limit=${limit}&_sort=created&_order=desc`);
+        const response = await fetch(
+            `${API_LISTINGS}?_sort=created&_order=desc&_seller=true&_bids=true&_page=${page}&_limit=${limit}`
+        );
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const json = await response.json();
-        console.log("Fetched Listings Data:", json);
-        console.log("Meta Data:", json.meta); // ✅ Sjekk om API-et faktisk respekterer `_limit`
+        const responseData = await response.json();
+        console.log("Full API response:", responseData);
 
-        return json.data || [];
+        if (Array.isArray(responseData.data)) {
+            // 🚨 Manuell sortering i tilfelle API-et ikke returnerer riktig
+            const sortedListings = responseData.data.sort((a, b) => new Date(b.created) - new Date(a.created));
+            console.log("Manually sorted listings:", sortedListings);
+            return sortedListings;
+        } else {
+            console.error("Unexpected API response format:", responseData);
+            return [];
+        }
     } catch (error) {
         console.error("Error fetching listings:", error);
         return [];
     }
 }
 
+
+// 🚀 Hent annonser med de høyeste budene (Featured Bids)
 export async function fetchFeaturedBids(limit = 4) {
     try {
         const response = await fetch(
-            `https://v2.api.noroff.dev/auction/listings?_seller=true&_bids=true&_active=true&limit=50`
+            `${API_LISTINGS}?_seller=true&_bids=true&_active=true&_limit=50`
         );
 
         if (!response.ok) {
@@ -32,9 +44,9 @@ export async function fetchFeaturedBids(limit = 4) {
         const json = await response.json();
         const allListings = json.data || [];
 
-        // Filtrer kun de med bud og sorter etter høyeste bud
+        // Filtrer annonser med bud og sorter etter høyeste bud
         const sortedByHighestBid = allListings
-            .filter(listing => listing.bids && listing.bids.length > 0)
+            .filter(listing => listing.bids?.length > 0)
             .sort((a, b) => {
                 const maxBidA = Math.max(...a.bids.map(bid => bid.amount), 0);
                 const maxBidB = Math.max(...b.bids.map(bid => bid.amount), 0);
@@ -47,5 +59,3 @@ export async function fetchFeaturedBids(limit = 4) {
         return [];
     }
 }
-
-
