@@ -1,5 +1,31 @@
 import { fetchListings, fetchFeaturedBids } from "../../api/post/read";
 
+export default async function homeInit() {
+    console.log("🏠 homeInit() running in home.js...");
+
+    try {
+        const listings = await fetchListings();
+        console.log("✅ Listings fetched:", listings);
+        if (!listings || listings.length === 0) {
+            console.warn("⚠️ No listings found!");
+        }
+        await renderListings(listings);
+    } catch (error) {
+        console.error("❌ Error rendering listings:", error);
+    }
+
+    try {
+        const featuredBids = await fetchFeaturedBids();
+        console.log("✅ Featured bids fetched:", featuredBids);
+        if (!featuredBids || featuredBids.length === 0) {
+            console.warn("⚠️ No featured bids found!");
+        }
+        await renderFeaturedBids(featuredBids);
+    } catch (error) {
+        console.error("❌ Error rendering featured bids:", error);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("🚀 Fetching fresh listings...");
     try {
@@ -259,5 +285,4 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("❌ Error rendering featured bids:", error);
     }
 });
-
 

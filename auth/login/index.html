@@ -1,22 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vérité Auctions - Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="/src/css/style.css" rel="stylesheet">
 </head>
+
 <body class="bg-black flex items-center justify-center min-h-screen">
     <div class="text-white text-center absolute top-10 text-5xl font-[crimson]">Vérité Auctions</div>
-    
+
     <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-80 text-white">
         <h2 class="text-xl font-medium text-center mb-4 font-[crimson]">Welcome</h2>
-        <form class="flex flex-col space-y-4">
-            <input type="email" placeholder="Email" class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300">
-            <input type="password" placeholder="Password" class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300">
-            <button type="submit" class="bg-white text-black py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Login</button>
+        <form name="login" class="flex flex-col space-y-4" method="post" onsubmit="return false;" id="login-form">
+            <input type="email" name="email" placeholder="Email"
+                class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+            <input type="password" name="password" placeholder="Password"
+                class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+            <button type="submit"
+                class="bg-white text-black py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Login</button>
         </form>
-        <p class="text-center text-sm mt-4">New here? <a href="#" class="underline">Register</a></p>
+        <p class="text-center text-sm mt-4">New here? <a href="/auth/register/index.html" class="underline">Register</a>
+        </p>
     </div>
+
+    <!-- Import login.js -->
+    <script type="module" src="/src/app.js"></script>
 </body>
+
 </html>

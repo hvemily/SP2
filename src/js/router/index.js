@@ -5,32 +5,36 @@
  * @returns {Promise<void>} A promise that resolves once the relevant module for the route is imported.
  */
 
-console.log("🚀 Router is running...");
-
-console.log("🌍 Current pathname:", window.location.pathname);
-
-
-
 export default async function router(pathname = window.location.pathname) {
   // Normalize the pathname by removing "index.html", trailing slashes, and query strings
   pathname = pathname.replace(/index\.html$/, "").replace(/\/$/, "") || "/";
   pathname = pathname.split("?")[0]; // Remove query strings
 
   switch (pathname) {
+    case "":
     case "/":
       console.log("📥 Trying to import home.js...");
-      console.log("📥 Trying to import home.js...");
 
-      import("./views/home.js")
-        .then(() => console.log("✅ home.js loaded successfully"))
-        .catch((error) => console.error("❌ Failed to import home.js:", error));
+      import("../router/views/home.js").then((module) => {
+        console.log("🏠 Calling home.js default function...");
+        if (module.default) {
+          module.default();
+        } else {
+          console.warn("⚠️ home.js has no default export.");
+        }
+      }).catch((error) => console.error("❌ Failed to import home.js:", error));
 
       break;
-    case "/auth/login.js":
-      import("../router/views/login")
-        .then((module) => module.default())
-        .catch((error) => console.error("Failed to import login.js:", error));
-      break;
+      case "/auth/login":
+        case "/auth/login/index.html":
+          console.log("🔑 Navigating to login page...");
+          import("../router/views/login.js")
+            .then((module) => {
+              console.log("✅ Login.js imported successfully.");
+              module.default(); // Kaller loginInit() som håndterer rendering
+            })
+            .catch((error) => console.error("Failed to import login.js:", error));
+          break;                                  
     case "/auth/register.js":
       import("../router/views/register")
         .then((module) => module.default())
