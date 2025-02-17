@@ -1,73 +1,70 @@
 /**
  * Handles routing for different paths and dynamically imports the appropriate modules.
  * 
- * @param {string} [pathname=window.location.pathname] - The pathname of the current route, defaults to the current page's pathname.
- * @returns {Promise<void>} A promise that resolves once the relevant module for the route is imported.
+ * @param {string} [pathname=window.location.pathname] - the pathname of the current route, defaults to the current page's pathname.
+ * @returns {Promise<void>} a promise that resolves once the relevant module for the route is imported.
  */
-
 export default async function router(pathname = window.location.pathname) {
-  // Normalize the pathname by removing "index.html", trailing slashes, and query strings
+  // normalize the pathname by removing "index.html", trailing slashes, and query strings
   pathname = pathname.replace(/index\.html$/, "").replace(/\/$/, "") || "/";
-  pathname = pathname.split("?")[0]; // Remove query strings
+  pathname = pathname.split("?")[0]; // remove query strings
+
 
   switch (pathname) {
     case "":
     case "/":
       console.log("📥 Trying to import home.js...");
-
-      import("../router/views/home.js").then((module) => {
-        console.log("🏠 Calling home.js default function...");
-        if (module.default) {
+      import("../router/views/home.js")
+        .then((module) => {
+          console.log("🏠 Calling home.js default function...");
           module.default();
-        } else {
-          console.warn("⚠️ home.js has no default export.");
-        }
-      }).catch((error) => console.error("❌ Failed to import home.js:", error));
-
+        })
+        .catch((error) => console.error("❌ Failed to import home.js:", error));
       break;
       case "/auth/login":
-        case "/auth/login/index.html":
-          console.log("🔑 Navigating to login page...");
-          import("../router/views/login.js")
-            .then((module) => {
-              console.log("✅ Login.js imported successfully.");
-              module.default(); // Kaller loginInit() som håndterer rendering
-            })
-            .catch((error) => console.error("Failed to import login.js:", error));
-          break;                                  
-    case "/auth/register.js":
-      import("../router/views/register")
-        .then((module) => module.default())
-        .catch((error) => console.error("Failed to import register.js:", error));
+        import("./views/login.js")
+          .catch((error) => console.error("Failed to import login.js:", error));
+        break;
+
+    case "/auth/register":
+    case "/auth/register/index.html":
+      console.log("📜 Navigating to register page...");
+      loadPage("/auth/register/index.html", "../router/views/register.js");
       break;
-    case "/profile.js":
-      import("../router/views/profile")
-        .then((module) => module.default())
-        .catch((error) => console.error("Failed to import profile.js:", error));
+
+    case "/profile":
+    case "/profile/index.html":
+      console.log("🧑 Navigating to profile page...");
+      loadPage("/profile/index.html", "../router/views/profile.js");
       break;
-    case "/listings.js":
-      import("../router/views/post")
-        .then((module) => module.default())
-        .catch((error) => console.error("Failed to import listings.js:", error));
+
+    case "/listings":
+    case "/listings/index.html":
+      console.log("📦 Navigating to listings...");
+      loadPage("/listings/index.html", "../router/views/post.js");
       break;
-    case "/listings/create.js":
-      import("../router/views/postCreate")
-        .then((module) => module.default())
-        .catch((error) => console.error("Failed to import create.js:", error));
+
+    case "/listings/create":
+    case "/listings/create/index.html":
+      console.log("✍️ Navigating to create listing...");
+      loadPage("/listings/create/index.html", "../router/views/postCreate.js");
       break;
-    case "/listings/edit.js":
+
+    case "/listings/edit":
+    case "/listings/edit/index.html":
       const listingId = new URLSearchParams(window.location.search).get("id");
       if (listingId) {
+        console.log("✏️ Editing listing...");
         import("../router/views/postEdit.js")
           .then((module) => module.editListing(listingId))
           .catch((error) => console.error("Failed to import edit.js:", error));
       } else {
-        import("../router/views/notFound.js")
-          .catch((error) => console.error("Failed to load notFound.js:", error));
+        loadPage("/notfound.html", "../router/views/notFound.js");
       }
       break;
+
     default:
-      import("../router/views/notFound.js")
-        .catch((error) => console.error("Failed to load notFound.js:", error));
+      console.log("❌ Page not found, loading 404...");
+      loadPage("/notfound.html", "../router/views/notFound.js");
   }
 }

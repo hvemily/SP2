@@ -1,5 +1,5 @@
 import { login } from "../../api/auth/login.js";
-import { showAlert, showLoader, hideLoader } from "../../../app.js"; // Importer spinnerkontroll
+
 
 export async function onLogin(event) {
   event.preventDefault();

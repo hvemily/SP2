@@ -6,33 +6,23 @@ document.addEventListener("DOMContentLoaded", () => {
     router();
 });
 
+// Håndter interne lenker uten full refresh
 document.addEventListener("click", (event) => {
     const link = event.target.closest("a");
+
     if (link && link.href.startsWith(window.location.origin)) {
-        event.preventDefault();
+        event.preventDefault(); // Hindrer sideoppdatering
         const newPath = link.getAttribute("href");
 
         if (newPath !== window.location.pathname) {
             window.history.pushState({}, "", newPath);
-            router(); // 🚀 Laster inn riktig innhold
+            router(); // 🚀 Kjør router for å oppdatere innholdet i #app
         }
     }
 });
 
+// Håndter navigasjon bakover/forover
 window.addEventListener("popstate", () => {
     console.log("🔙 Navigating back/forward...");
     router();
 });
-
-// 🎯 Legg til disse funksjonene og eksporter dem:
-export function showAlert(message, type = "info") {
-    alert(`${type.toUpperCase()}: ${message}`); 
-}
-
-export function showLoader() {
-    console.log("⏳ Showing loader...");
-}
-
-export function hideLoader() {
-    console.log("✅ Hiding loader...");
-}
