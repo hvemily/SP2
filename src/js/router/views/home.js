@@ -1,4 +1,5 @@
-import { fetchListings, fetchFeaturedBids } from "../../api/post/read";
+// src/js/router/views/home.js
+import { fetchListings, fetchFeaturedBids } from "../../api/post/read.js";
 
 let currentPage = 0;
 const postsPerPage = 8;
@@ -23,7 +24,6 @@ function updatePaginationButtons() {
 
 // Lager pagineringskontroller
 function createPaginationControls() {
-  // Hvis kontrollene allerede er lagt til, gjør ingenting
   if (document.getElementById("prevPage") && document.getElementById("nextPage")) return;
 
   const container = document.getElementById("auction-listings");
@@ -60,8 +60,9 @@ async function renderListings(listingsData = null) {
     console.error("No container found for listings!");
     return;
   }
+  // Tøm containeren før rendering
+  listingsContainer.innerHTML = "";
 
-  // Bruk allListings hvis ingen spesifikke data sendes inn
   if (!listingsData) {
     listingsData = allListings;
   }
@@ -76,15 +77,12 @@ async function renderListings(listingsData = null) {
       console.log("Bids Data:", listing.bids);
       console.log("Seller Data:", listing.seller);
 
-      // Beregn høyeste bud
       const highestBid = listing.bids && listing.bids.length > 0
         ? `${Math.max(...listing.bids.map(bid => bid.amount))} ${Math.max(...listing.bids.map(bid => bid.amount)) === 1 ? "credit" : "credits"}`
         : "No bids yet";
 
-      // Hent selgerens navn
       const sellerName = listing.seller?.name || listing.seller?.username || "Unknown Seller";
 
-      // Beregn tid igjen for auksjonen
       const endsAt = new Date(listing.endsAt);
       const now = new Date();
       const timeLeft = endsAt - now;
@@ -96,7 +94,6 @@ async function renderListings(listingsData = null) {
         timeLeftString = `${days}d ${hours}h ${minutes}m left`;
       }
 
-      // Sett riktig bilde
       const imageSrc = listing.media?.[0]?.url || listing.media?.[0] || "/src/assets/icons/v-black.png";
       const isPlaceholder = imageSrc === "/src/assets/icons/v-black.png";
       const imageClass = isPlaceholder ? "w-[50%] h-auto object-contain" : "w-full h-full object-cover";
@@ -111,10 +108,14 @@ async function renderListings(listingsData = null) {
             </div>
             <div class="p-4 flex flex-col flex-grow">
               <h3 class="text-lg font-medium">${listing.title}</h3>
-              <p class="text-gray-500 text-sm flex-grow">${listing.description ? listing.description.substring(0, 50) + '...' : "No description available."}</p>
+              <p class="text-gray-500 text-sm flex-grow">
+                ${listing.description ? listing.description.substring(0, 50) + '...' : "No description available."}
+              </p>
               <p class="text-gray-700 font-medium mt-2">Seller: ${sellerName}</p>
               <p class="text-customBlue font-semibold mt-2">Current Bid: ${highestBid} | <span class="text-gray-600 font-medium">${timeLeftString}</span></p>
-              <button onclick="handleMakeOffer('${listing.id}')" class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">See listing</button>
+              <button onclick="handleMakeOffer('${listing.id}')" class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
+                See listing
+              </button>
             </div>
           </div>
         </a>
@@ -165,7 +166,9 @@ async function renderFeaturedBids(featuredListings) {
               <h3 class="text-lg font-medium">${listing.title}</h3>
               <p class="text-gray-500 text-sm flex-grow">${listing.description ? listing.description.substring(0, 50) + '...' : "No description available."}</p>
               <p class="text-customBlue font-semibold mt-2">Current Bid: ${highestBid}</p>
-              <button onclick="handleMakeOffer('${listing.id}')" class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">Make Offer</button>
+              <button onclick="handleMakeOffer('${listing.id}')" class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
+                Make Offer
+              </button>
             </div>
           </div>
         </a>
@@ -174,38 +177,22 @@ async function renderFeaturedBids(featuredListings) {
     .join("");
 }
 
-// Søkefunksjon (valgfritt)
-const searchInput = document.getElementById("searchInput");
-if (searchInput) {
-  async function handleSearch(event) {
+// Søkefunksjon (bruk kun "input" event for å unngå duplikater)
+if (document.getElementById("searchInput")) {
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", async (event) => {
     const query = searchInput.value.toLowerCase().trim();
-    if (event.type === "input" || (event.type === "keydown" && event.key === "Enter")) {
-      if (query === "") {
-        renderListings(allListings);
-      } else {
-        let filteredListings = allListings.filter(listing =>
-          listing.title.toLowerCase().includes(query)
-        );
-        if (filteredListings.length < 8) {
-          const tagMatches = allListings.filter(listing =>
-            listing.tags && listing.tags.some(tag => tag.toLowerCase().includes(query))
-          );
-          filteredListings = [...new Set([...filteredListings, ...tagMatches])];
-        }
-        if (filteredListings.length < 8) {
-          const additionalListings = await fetchListings(20);
-          const moreFiltered = additionalListings.filter(listing =>
-            listing.title.toLowerCase().includes(query) ||
-            (listing.tags && listing.tags.some(tag => tag.toLowerCase().includes(query)))
-          );
-          filteredListings = [...new Set([...filteredListings, ...moreFiltered])].slice(0, 8);
-        }
-        renderListings(filteredListings);
-      }
+    if (query === "") {
+      renderListings(allListings);
+    } else {
+      let filteredListings = allListings.filter(listing =>
+        listing.title.toLowerCase().includes(query) ||
+        (listing.tags && listing.tags.some(tag => tag.toLowerCase().includes(query))) ||
+        (listing.description && listing.description.toLowerCase().includes(query))
+      );
+      renderListings(filteredListings);
     }
-  }
-  searchInput.addEventListener("input", handleSearch);
-  searchInput.addEventListener("keydown", handleSearch);
+  });
 }
 
 // Eksporter en init-funksjon som routeren kan kalle
@@ -218,7 +205,6 @@ export default async function homeInit() {
     if (!listings || listings.length === 0) {
       console.warn("⚠️ No listings found!");
     }
-    // Filtrer ut utgåtte auksjoner:
     const now = new Date();
     allListings = listings.filter(listing => new Date(listing.endsAt) > now);
     renderCurrentPage();
@@ -238,4 +224,3 @@ export default async function homeInit() {
     console.error("❌ Error rendering featured bids:", error);
   }
 }
-

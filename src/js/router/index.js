@@ -1,13 +1,8 @@
-/**
- * Handles routing for different paths and dynamically imports the appropriate modules.
- *
- * @param {string} [pathname=window.location.pathname] - the pathname of the current route, defaults to the current page's pathname.
- * @returns {Promise<void>} a promise that resolves once the relevant module for the route is imported.
- */
 export default async function router(pathname = window.location.pathname) {
-  // Normalize the pathname by removing "index.html", trailing slashes, and query strings
+  // Normaliser pathen: fjerner "index.html" og trailing slash, og fjerner query string
   pathname = pathname.replace(/index\.html$/, "").replace(/\/$/, "") || "/";
-  pathname = pathname.split("?")[0]; // remove query strings
+  pathname = pathname.split("?")[0];
+  console.log("Normalized path:", pathname);
 
   switch (pathname) {
     case "":
@@ -51,47 +46,63 @@ export default async function router(pathname = window.location.pathname) {
       loadPage("../router/views/post.js");
       break;
 
-      case "/listing/create":
-        console.log("✍️ Navigating to create listing...");
-        loadPage("./views/postCreate.js");
-        break;
-      
+    case "/listing/create":
+      console.log("✍️ Navigating to create listing...");
+      loadPage("../router/views/postCreate.js");
+      break;
 
-        case "/listing/edit":
-          const listingId = new URLSearchParams(window.location.search).get("id");
-          if (listingId) {
-            console.log("✏️ Editing listing...");
-            import("../router/views/postEdit.js")
-              .then((module) => {
-                module.default(listingId);
-              })
-              .catch((error) => console.error("❌ Failed to import postEdit.js:", error));
-          } else {
-            loadPage("../router/views/notFound.js");
-          }
-          break;
-        
+    case "/listing/edit":
+      const listingId = new URLSearchParams(window.location.search).get("id");
+      if (listingId) {
+        console.log("✏️ Editing listing...");
+        import("../router/views/postEdit.js")
+          .then((module) => {
+            if (module.default) {
+              module.default(listingId);
+            } else {
+              console.error("❌ postEdit.js does not have a default export.");
+            }
+          })
+          .catch((error) => console.error("❌ Failed to import postEdit.js:", error));
+      } else {
+        loadPage("../router/views/notFound.js");
+      }
+      break;
 
     case "/listing":
       console.log("📄 Navigating to listing details...");
       import("../router/views/post.js")
         .then((module) => {
-          console.log("📄 Calling post.js default function for listing details...");
-          module.default();
+          if (module.default) {
+            console.log("📄 Calling post.js default function for listing details...");
+            module.default();
+          } else {
+            console.error("❌ post.js does not have a default export.");
+          }
         })
         .catch((error) => console.error("❌ Failed to import post.js for listing details:", error));
       break;
       
+    // Legg til en case for kategori-siden
+    case "/listing/category":
+      console.log("📂 Navigating to category page...");
+      import("../router/views/category.js")
+        .then((module) => {
+          if (module.default) {
+            module.default();
+          } else {
+            console.error("❌ category.js does not have a default export.");
+          }
+        })
+        .catch((error) => console.error("❌ Failed to import category.js:", error));
+      break;
+
     default:
       console.log("❌ Page not found, loading 404...");
       loadPage("../router/views/notFound.js");
   }
 }
 
-/**
- * Hjelpefunksjon for å laste inn moduler dynamisk.
- * @param {string} modulePath - Stien til modulen som skal importeres.
- */
 function loadPage(modulePath) {
   console.log(`Loading module ${modulePath}...`);
   import(modulePath)
