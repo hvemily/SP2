@@ -1,9 +1,9 @@
 import { login } from "../../api/auth/login.js";
-
+import { hideLoader, showLoader, showAlert } from "../../../app.js";
 
 export async function onLogin(event) {
   event.preventDefault();
-  console.log("🟢 Login form submitted!");
+  console.log("🟢 onLogin triggered!");
 
   const form = event.target;
   const email = form.email.value.trim();
@@ -16,32 +16,36 @@ export async function onLogin(event) {
 
   try {
     showLoader();
-    console.log("🔄 Sending login request...");
 
+    // Kall login()-funksjonen, som returnerer brukerdata (token og name)
     const user = await login({ email, password });
-    console.log("✅ Login request successful:", user);
+    if (!user) return;
 
-    const token = user.data?.accessToken;
-    const name = user.data?.name;
+    const token = user.accessToken;
+    const name = user.name;
 
     if (token && name) {
-      console.log("🔑 Storing user credentials...");
+      // Lagre brukerdata og e-post for å kunne hente credits senere
       localStorage.setItem("token", token);
       localStorage.setItem("name", name);
+      localStorage.setItem("email", email);
+
+      // Hent brukerens credits fra localStorage med en nøkkel basert på e-post
+      const creditsKey = `credits_${email}`;
+      let userCredits = localStorage.getItem(creditsKey);
+      if (!userCredits) {
+        userCredits = 1000;
+        localStorage.setItem(creditsKey, userCredits);
+      }
 
       showAlert("Login successful! Redirecting...", "success");
-
       setTimeout(() => {
-        console.log("🚀 Redirecting to homepage...");
-        window.history.pushState({}, "", "/");
-        router();
-      }, 500);      
+        window.location.href = "/";
+      }, 2000);
     } else {
-      showAlert("Login failed: Missing token or name.", "error");
-      console.error("❌ Login response missing token or name:", user);
+      showAlert("Login failed: Missing token or name in user object.", "error");
     }
   } catch (error) {
-    console.error("❌ Login error:", error);
     showAlert(`Login failed: ${error.message}`, "error");
   } finally {
     hideLoader();

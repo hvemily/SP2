@@ -23,6 +23,30 @@
 
 
 <body class="font-[Inter] bg-gray-100">
+
+<!-- Bekreftelsesmodal (skjult som standard) -->
+<div 
+  id="confirmation-modal" 
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999] hidden"
+>
+  <div class="bg-white text-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
+    <h2 id="confirmation-title" class="text-lg font-semibold mb-4">Are you sure?</h2>
+    <p id="confirmation-message" class="text-gray-600 mb-6">
+      <!-- Meldingen oppdateres dynamisk -->
+    </p>
+    <div class="flex justify-end space-x-4">
+      <button id="cancel-button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
+        Cancel
+      </button>
+      <button id="confirm-button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
   <header class="bg-black text-gray-800 p-4 shadow-md relative">
     <div class="container mx-auto flex justify-between items-center relative">
       <!-- Logo -->
@@ -38,7 +62,7 @@
       <div class="flex items-center space-x-6 flex-grow justify-end">
         <nav class="space-x-6 flex items-center">
           <a href="/auth/register/index.html" class="text-customGray hover:text-white font-bold hover:scale-105">Sell with us</a>
-          <a href="/auth/login/index.html" id="login" class="bg-customGray text-black px-4 py-2 rounded-full font-bold transition-all duration-200 
+          <a href="/auth/login/index.html" id="login" data-no-spa class="bg-customGray text-black px-4 py-2 rounded-full font-bold transition-all duration-200 
             hover:bg-black hover:text-customGray hover:scale-105 hover:border">Login</a>
         </nav>
       </div>

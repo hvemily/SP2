@@ -15,11 +15,16 @@
 </head>
 
 <body class="bg-black flex items-center justify-center min-h-screen">
+    <!-- Plasser denne koden et passende sted i body, for eksempel øverst -->
+<div id="alert" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-lg z-50">
+    <span id="alert-message"></span>
+  </div>
+  
     <div class="text-white text-center absolute top-10 text-5xl font-[crimson]">Vérité Auctions</div>
 
     <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-80 text-white">
         <h2 class="text-xl font-medium text-center mb-4 font-[crimson]">Welcome</h2>
-        <form name="login" class="flex flex-col space-y-4" method="post" onsubmit="return false;" id="login-form">
+        <form name="login" class="flex flex-col space-y-4" method="post" id="login-form">
             <input type="email" name="email" placeholder="Email"
                 class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
             <input type="password" name="password" placeholder="Password"

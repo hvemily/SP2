@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vérité Auctions - Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link href="/src/css/style.css" rel="stylesheet" />
+</head>
+
+<body class="bg-black flex items-center justify-center min-h-screen">
+  <!-- Alert element -->
+  <div id="alert" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-lg z-50">
+    <span id="alert-message"></span>
+  </div>
+
+  <!-- Logo/title -->
+  <div class="text-white text-center absolute top-10 text-5xl font-[crimson]">Vérité Auctions</div>
+
+  <!-- Register form container -->
+  <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-80 text-white">
+    <h2 class="text-xl font-medium text-center mb-4 font-[crimson]">Register</h2>
+    <form name="register" id="register-form" class="flex flex-col space-y-4" method="post">
+      <!-- Navn -->
+      <input type="text" name="name" placeholder="Name"
+        class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+      <!-- Epost -->
+      <input type="email" name="email" placeholder="Email"
+        class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+      <!-- Passord -->
+      <input type="password" name="password" placeholder="Password"
+        class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+      <!-- Bekreft passord -->
+      <input type="password" name="confirmPassword" placeholder="Confirm Password"
+        class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+      <button type="submit"
+        class="bg-white text-black py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Register</button>
+    </form>
+    <p class="text-center text-sm mt-4">Already have an account? <a href="/auth/login/index.html"
+        class="underline">Login</a></p>
+  </div>
+
+  <!-- Import global app and register view -->
+  <script type="module" src="/src/app.js"></script>
+  <script type="module" src="../../src/js/router/views/register.js"></script>
+</body>
+
+</html>

@@ -2,38 +2,38 @@ import { API_LISTINGS } from "../constants.js";
 
 export async function fetchListings(limit = 8, page = 1) {
     console.log(`🚀 Fetching listings: limit=${limit}, page=${page}`);
-
+  
     if (!API_LISTINGS) {
-        console.error("❌ API_LISTINGS is undefined! Check your environment variables or API configuration.");
-        return [];
+      console.error("❌ API_LISTINGS is undefined! Check your configuration.");
+      return [];
     }
-
+  
     try {
-        const response = await fetch(
-            `${API_LISTINGS}?_sort=created&_order=desc&_seller=true&_bids=true&_page=${page}&_limit=${limit}`
-        );
-
-        console.log("🔄 Response received:", response);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const responseData = await response.json();
-        console.log("📦 Full API response:", responseData);
-
-        if (Array.isArray(responseData.data)) {
-            // 🚨 Manuell sortering i tilfelle API-et ikke returnerer riktig
-            return responseData.data.sort((a, b) => new Date(b.created) - new Date(a.created));
-        } else {
-            console.error("❌ Unexpected API response format:", responseData);
-            return [];
-        }
-    } catch (error) {
-        console.error("❌ Error fetching listings:", error);
+      const response = await fetch(
+        `${API_LISTINGS}?sort=created&_order=desc&_seller=true&_bids=true&active=true&_page=${page}&_limit=${limit}`
+      );
+  
+      console.log("🔄 Response received:", response);
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const responseData = await response.json();
+      console.log("📦 Full API response:", responseData);
+  
+      if (Array.isArray(responseData.data)) {
+        return responseData.data.sort((a, b) => new Date(b.created) - new Date(a.created));
+      } else {
+        console.error("❌ Unexpected API response format:", responseData);
         return [];
+      }
+    } catch (error) {
+      console.error("❌ Error fetching listings:", error);
+      return [];
     }
-}
+  }
+  
 
 
 // 🚀 Hent annonser med de høyeste budene (Featured Bids)
@@ -64,4 +64,25 @@ export async function fetchFeaturedBids(limit = 4) {
         console.error("Error fetching featured bids:", error);
         return [];
     }
+}
+
+/**
+ * Henter data for én spesifikk listing basert på ID.
+ * @param {string} id - ID-en til listing.
+ * @returns {Promise<Object>} Listing-data
+ */
+export async function fetchSingleListing(id) {
+  try {
+    const response = await fetch(`${API_LISTINGS}/${id}?_bids=true&_seller=true`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch listing with id ${id}: ${response.status}`);
+    }
+    const responseData = await response.json();
+    // Her kommer responseData i form { data: {...}, meta: {...} }
+    // => Returner bare data-delen:
+    return responseData.data;
+  } catch (error) {
+    console.error("❌ fetchSingleListing error:", error);
+    throw error;
+  }
 }
