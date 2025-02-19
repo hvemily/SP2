@@ -1,16 +1,14 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  base: "/", // Sikrer at alle filer får riktig sti i dist/
+  build: {
+    outDir: "dist", // Output til dist-mappen
+    assetsDir: "assets", // Plasserer statiske filer i en egen assets-mappe
+    emptyOutDir: true, // Sletter gammel build før ny lages
+  },
   server: {
-    port: 5173, // Standardporten for Vite
-    open: true, // Åpner automatisk i nettleseren ved oppstart
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
-    }
-  }
+    port: 5173, // Standardport for utvikling
+    open: true, // Åpner nettleseren automatisk
+  },
 });
