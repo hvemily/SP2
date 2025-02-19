@@ -3,26 +3,26 @@ import router from "./js/router/index.js";
 import { setLogoutListener } from "./js/ui/global/logout.js";
 import { fetchProfile } from "./js/api/profile/read.js"; // ✅ Henter ekte credits fra API-et
 
-// Når DOM-en er lastet, kjører vi router og oppdaterer navigasjonen
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 App loaded, running router...");
   router(window.location.pathname);
   await updateNavigation(); // ✅ Vent på oppdatering av navigasjonen
+  setupHamburgerMenu();    // ✅ Sett opp hamburger-løsningen
 });
 
-// Håndter tilbake/forover-knapper i nettleseren
 window.addEventListener("popstate", () => {
   console.log("🔙 Navigating back/forward...");
   router();
 });
 
 /**
- * Oppdaterer navigasjonsmenyen basert på brukerens innloggingsstatus og credits fra API-et.
+ * Oppdaterer navigasjonen for innloggede/utloggede brukere.
  */
 async function updateNavigation() {
-  const navContainer = document.querySelector("header .flex-grow nav");
-  if (!navContainer) {
-    console.error("⚠️ Navigation container not found!");
+  const desktopNav = document.getElementById("desktop-user-nav");
+  const mobileNav = document.getElementById("mobile-user-nav");
+  if (!desktopNav || !mobileNav) {
+    console.error("⚠️ Could not find user nav elements!");
     return;
   }
 
@@ -31,24 +31,48 @@ async function updateNavigation() {
 
   if (token && name) {
     try {
-      const profile = await fetchProfile(); // ✅ Hent ekte credits fra API
-      const credits = profile.data.credits ?? "Not available"; // Fallback om credits mangler
+      const profile = await fetchProfile();
+      const credits = profile.data.credits ?? "N/A";
 
-      navContainer.innerHTML = `
+      const loggedInHTML = `
         <span class="text-customGray font-bold text-sm">Credits: ${credits}</span>
         <a href="/profile/index.html" class="text-customGray hover:text-white font-bold hover:scale-105">My Profile</a>
         <button id="logout" class="bg-customGray text-black px-4 py-2 rounded-full font-bold transition-all duration-200 hover:bg-black hover:text-customGray hover:scale-105">Logout</button>
       `;
+      desktopNav.innerHTML = loggedInHTML;
+      mobileNav.innerHTML = loggedInHTML;
 
-      setLogoutListener("logout"); // ✅ Bind logout-knappen én gang
+      // Bind logout-knappen(e)
+      const logoutButtons = document.querySelectorAll("#logout");
+      logoutButtons.forEach((btn) => {
+        setLogoutListener(btn.id);
+      });
+
     } catch (error) {
       console.error("❌ Failed to fetch credits:", error);
     }
   } else {
-    navContainer.innerHTML = `
+    const loggedOutHTML = `
       <a href="/auth/register/index.html" class="text-customGray hover:text-white font-bold hover:scale-105">Sell with us</a>
       <a href="/auth/login/index.html" id="login" data-no-spa class="bg-customGray text-black px-4 py-2 rounded-full font-bold transition-all duration-200 hover:bg-black hover:text-customGray hover:scale-105 hover:border">Login</a>
     `;
+    desktopNav.innerHTML = loggedOutHTML;
+    mobileNav.innerHTML = loggedOutHTML;
+  }
+}
+
+/**
+ * Setter opp hamburger-menyen for mobilvisning.
+ * Toggler #mobile-nav-menu når man klikker på #hamburger-btn.
+ */
+function setupHamburgerMenu() {
+  const hamburgerBtn = document.getElementById("hamburger-btn");
+  const mobileNavMenu = document.getElementById("mobile-nav-menu");
+
+  if (hamburgerBtn && mobileNavMenu) {
+    hamburgerBtn.addEventListener("click", () => {
+      mobileNavMenu.classList.toggle("hidden");
+    });
   }
 }
 
