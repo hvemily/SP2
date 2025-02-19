@@ -1,3 +1,7 @@
+[build]
+  command = "npm run build"
+  publish = "dist"  # Sørg for at det er riktig byggmappe
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
