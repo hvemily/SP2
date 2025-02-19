@@ -76,17 +76,18 @@ function renderListingDetail(listing) {
   container.innerHTML = `
     <div class="bg-white p-6 shadow-md rounded flex flex-col md:flex-row gap-6">
       <!-- Bilde-seksjon -->
-      <div class="flex-1 flex items-center justify-center">
-        ${
-          listing.media && listing.media.length > 0
-            ? `<img src="${listing.media[0].url || listing.media[0]}" alt="${listing.title}" class="max-w-full h-auto rounded" />`
-            : `<img src="/src/assets/icons/v-black.png" alt="Placeholder" class="max-w-full h-auto" />`
-        }
-      </div>
+<div class="flex-1 flex items-center justify-center">
+  ${
+    listing.media && listing.media.length > 0
+      ? `<img src="${listing.media[0].url || listing.media[0]}" alt="${listing.title}" class="max-w-[500px] max-h-[400px] w-auto h-auto rounded object-cover" />`
+      : `<img src="/src/assets/icons/v-black.png" alt="Placeholder" class="max-w-[300px] max-h-[250px] w-auto h-auto object-cover" />`
+  }
+</div>
+
 
       <!-- Info-seksjon -->
       <div class="flex-1 flex flex-col justify-center gap-4">
-        <h2 class="text-3xl font-bold">${listing.title}</h2>
+        <h2 class="text-3xl font-bold font-[crimson]">${listing.title}</h2>
         <p class="text-gray-600">${listing.description || "No description available."}</p>
         <p class="text-gray-700 font-medium">Seller: ${listing.seller?.name || "Unknown"}</p>
         <p class="text-gray-700 font-medium">
@@ -99,11 +100,8 @@ function renderListingDetail(listing) {
         
         <!-- Knapper/handlinger -->
         <div class="mt-4 flex flex-col gap-4">
-          <button id="placeBidBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          <button id="placeBidBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-700">
             Place Bid
-          </button>
-          <button id="viewBidsBtn" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300">
-            View Bids
           </button>
         </div>
         
@@ -117,7 +115,7 @@ function renderListingDetail(listing) {
             placeholder="Enter your bid in credits"
             min="1"
           />
-          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          <button type="submit" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-700">
             Submit Bid
           </button>
         </form>

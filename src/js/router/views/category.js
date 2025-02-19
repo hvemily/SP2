@@ -101,9 +101,10 @@ export function createListingCard(listing) {
           </p>
           <p class="text-gray-700 font-medium mt-2">Seller: ${listing.seller?.name || "Unknown Seller"}</p>
           <p class="text-customBlue font-semibold mt-2">Current Bid: ${highestBid}</p>
-          <button onclick="handleMakeOffer('${listing.id}')" class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
-            Make Offer
-          </button>
+<button onclick="window.location.href='/listing/index.html?id=${listing.id}'"
+  class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
+  View listing
+</button>
         </div>
       </div>
     </a>

@@ -113,25 +113,16 @@ async function renderListings(listingsData = null) {
               </p>
               <p class="text-gray-700 font-medium mt-2">Seller: ${sellerName}</p>
               <p class="text-customBlue font-semibold mt-2">Current Bid: ${highestBid} | <span class="text-gray-600 font-medium">${timeLeftString}</span></p>
-              <button onclick="handleMakeOffer('${listing.id}')" class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
-                See listing
-              </button>
+<button onclick="window.location.href='/listing/index.html?id=${listing.id}'"
+  class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
+  View listing
+</button>
             </div>
           </div>
         </a>
       `;
     })
     .join("");
-}
-
-// Håndter "Make Offer"-klikk
-function handleMakeOffer(listingId) {
-  const isLoggedIn = !!localStorage.getItem("token");
-  if (isLoggedIn) {
-    window.location.href = `/bid.html?id=${listingId}`;
-  } else {
-    window.location.href = "/login.html";
-  }
 }
 
 // Renderer featured bids i containeren "featured-auctions"
@@ -166,9 +157,10 @@ async function renderFeaturedBids(featuredListings) {
               <h3 class="text-lg font-medium">${listing.title}</h3>
               <p class="text-gray-500 text-sm flex-grow">${listing.description ? listing.description.substring(0, 50) + '...' : "No description available."}</p>
               <p class="text-customBlue font-semibold mt-2">Current Bid: ${highestBid}</p>
-              <button onclick="handleMakeOffer('${listing.id}')" class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
-                Make Offer
-              </button>
+<button onclick="window.location.href='/listing/index.html?id=${listing.id}'"
+  class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
+  View listing
+</button>
             </div>
           </div>
         </a>
