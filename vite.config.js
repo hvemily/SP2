@@ -1,14 +1,12 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/", // Sikrer at alle filer får riktig sti i dist/
+  base: "/", // Viktig for at Netlify skal finne riktige paths!
   build: {
-    outDir: "dist", // Output til dist-mappen
-    assetsDir: "assets", // Plasserer statiske filer i en egen assets-mappe
-    emptyOutDir: true, // Sletter gammel build før ny lages
+    outDir: "dist",
   },
   server: {
-    port: 5173, // Standardport for utvikling
-    open: true, // Åpner nettleseren automatisk
+    port: 5173,
+    open: true,
   },
 });
