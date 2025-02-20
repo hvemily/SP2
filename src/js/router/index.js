@@ -30,7 +30,7 @@ export default async function router(pathname = window.location.pathname) {
 
     case "/profile":
       console.log("🧑 Navigating to profile page...");
-      import("../router/views/profile.js")
+      import("./views/profile.js")
         .then((module) => {
           if (module.profileInit) {
             module.profileInit();

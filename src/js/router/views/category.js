@@ -1,5 +1,6 @@
 // router/views/category.js
 import { fetchListings } from "../../api/post/read.js";
+import { setLogoutListener } from "../../ui/global/logout.js";
 
 /**
  * Henter kategori-parameteren fra URL-en.
@@ -95,12 +96,12 @@ export function createListingCard(listing) {
           </div>
         </div>
         <div class="p-4 flex flex-col flex-grow">
-          <h3 class="text-lg font-medium">${listing.title}</h3>
+          <h3 class="text-lg font-bold font-[crimson]">${listing.title}</h3>
           <p class="text-gray-500 text-sm flex-grow">
             ${listing.description ? listing.description.substring(0, 50) + "..." : "No description available."}
           </p>
-          <p class="text-gray-700 font-medium mt-2">Seller: ${listing.seller?.name || "Unknown Seller"}</p>
-          <p class="text-customBlue font-semibold mt-2">Current Bid: ${highestBid}</p>
+          <p class="text-black font-medium mt-2">Seller: ${listing.seller?.name || "Unknown Seller"}</p>
+          <p class="text-black font-semibold mt-2">Current Bid: ${highestBid}</p>
 <button onclick="window.location.href='/listing/index.html?id=${listing.id}'"
   class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
   View listing

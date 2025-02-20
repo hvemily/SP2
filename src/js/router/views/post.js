@@ -1,6 +1,7 @@
 import { fetchSingleListing } from "../../api/post/read.js";
 import { API_KEY, API_LISTINGS, API_BASE } from "../../api/constants.js";
-
+import { showConfirmationModal } from "../../ui/global/confirmationModal.js";
+import { showAlert } from "../../../app.js";
 /**
  * Hovedfunksjon som henter 'id' fra URL, laster data og viser i DOM.
  * Eksporteres som default slik at routeren kan kalle module.default().
@@ -135,19 +136,23 @@ function renderListingDetail(listing) {
   bidForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const bidAmount = Number(document.getElementById("bidAmount").value);
+  
     if (isNaN(bidAmount) || bidAmount <= 0) {
-      alert("Please enter a valid bid amount.");
+      showAlert("Invalid bid", "Please enter a valid bid amount.");
       return;
     }
+  
     try {
       await handleBid(listing.id, bidAmount);
       // Etter et vellykket bud, re-fetch listing-detaljene for å oppdatere UI
       await loadAndRenderListing(listing.id);
     } catch (error) {
-      console.error("Failed to place bid:", error);
+      console.error("❌ Failed to place bid:", error);
+      showAlert("An error occurred while placing your bid. Please try again.");
     }
   });
-}
+}  
+
 
 /**
  * Håndterer innsending av bud: sjekker kreditter, sender bud til API og oppdaterer kreditter lokalt.
@@ -157,7 +162,7 @@ function renderListingDetail(listing) {
 async function handleBid(listingId, bidAmount) {
   const email = localStorage.getItem("email");
   if (!email) {
-    alert("You must be logged in to place a bid.");
+    showAlert("Login Required", "You must be logged in to place a bid.", "error");
     return;
   }
 
@@ -168,7 +173,7 @@ async function handleBid(listingId, bidAmount) {
   }
 
   if (bidAmount > userCredits) {
-    alert(`Not enough credits! You only have ${userCredits} credits.`);
+    showAlert("Insufficient Credits", `Not enough credits! You only have ${userCredits} credits.`, "error");
     return;
   }
 
@@ -182,23 +187,37 @@ async function handleBid(listingId, bidAmount) {
       },
       body: JSON.stringify({ amount: bidAmount }),
     });
-    
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.log("🚨 Bid error response:", errorData);
-      const errorMsg = errorData?.errors?.[0]?.message || JSON.stringify(errorData);
-      throw new Error(`Failed to place bid. Status: ${response.status} - ${errorMsg}`);
+
+      // Forsøk å hente en meningsfull feilmelding fra API-et
+      let errorMsg = "Failed to place bid.";
+      if (errorData?.errors?.length > 0) {
+        errorMsg = errorData.errors.map(err => err.message).join("\n");
+      } else if (errorData?.message) {
+        errorMsg = errorData.message;
+      } else if (response.status === 400) {
+        errorMsg = "Bid amount is too low. Please place a higher bid.";
+      }
+
+      throw new Error(`Status: ${response.status} - ${errorMsg}`);
     }
-    
+
     // Oppdater brukerens credits lokalt
     userCredits -= bidAmount;
     localStorage.setItem(creditsKey, userCredits);
-    alert(`Your bid of ${bidAmount} credits has been placed!`);
+
+    showAlert("Bid Placed!", `Your bid of ${bidAmount} credits has been placed successfully.`, "success");
   } catch (error) {
     console.error("❌ handleBid error:", error);
-    alert(`Failed to place bid: ${error.message}`);
+    showAlert("Bid Error", `Failed to place bid: ${error.message}`, "error");
   }
 }
+
+
+
 
 /**
  * Henter budene for en gitt listing.

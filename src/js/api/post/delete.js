@@ -3,7 +3,7 @@ import { API_BASE, API_KEY } from "../constants.js"; // 🔹 Importer API_KEY
 /**
  * Deletes a listing by ID.
  * @param {string} listingId - The ID of the listing to delete.
- * @returns {Promise<void>}
+ * @returns {Promise<Response>} Returnerer API-responsen
  */
 export async function deleteListing(listingId) {
   const token = localStorage.getItem("token");
@@ -32,6 +32,8 @@ export async function deleteListing(listingId) {
     }
 
     console.log(`✅ Listing ${listingId} deleted successfully.`);
+    return response; // 🔥 Viktig! Returner responsen så `onDeleteListing` vet at slettingen var vellykket.
+
   } catch (error) {
     console.error("❌ Error deleting listing:", error);
     throw error;

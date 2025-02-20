@@ -1,5 +1,6 @@
+import { showAlert } from "../../../app.js";
 import { createListing } from "../../api/post/create.js";
-import { showAlert } from "../../../app.js"; // Sørg for at showAlert er eksportert fra app.js
+import { showConfirmationModal } from "../global/confirmationModal.js"; // Bruk modalen for feilmeldinger
 
 /**
  * Initialiserer create listing-siden.
@@ -22,7 +23,11 @@ export function initCreateListing() {
     const tagsRaw = formData.get("tags").trim();
 
     if (!title || !description || !endsAtRaw) {
-      alert("Please fill out all required fields: title, description, and deadline.");
+      showConfirmationModal({
+        title: "Error",
+        message: "Please fill out all required fields: title, description, and deadline.",
+        confirmText: "OK",
+      });
       return;
     }
 
@@ -39,7 +44,7 @@ export function initCreateListing() {
       title,
       description,
       endsAt, // ISO-formatet, f.eks. "2025-01-01T12:00:00Z"
-      media: mediaUrl ? [{ url: mediaUrl, alt: title }] : [],
+      media,
       tags
     };
 
@@ -47,19 +52,32 @@ export function initCreateListing() {
 
     try {
       const createdListing = await createListing(listingData);
-      console.log("Listing created successfully:", createdListing);
+      console.log("✅ Listing created successfully:", createdListing);
       
-      // Vis en suksessmelding via modal/alert
+      // ✅ Vis grønn suksessmelding som i `update.js`
       showAlert("Listing created successfully!", "success");
-      
-      // Etter 2 sekunder, redirect til "My Profile" siden
+
+      // ✅ Etter 2 sekunder, redirect til "My Profile" siden
       setTimeout(() => {
         window.location.href = "/profile/index.html";
       }, 2000);
       
     } catch (error) {
-      console.error("Failed to create listing:", error);
-      alert("Failed to create listing: " + error.message);
+      console.error("❌ Failed to create listing:", error);
+
+      // ✅ Vis feilmelding i modalen
+      let errorMessage = "Failed to create listing. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "object" && error !== null) {
+        errorMessage = JSON.stringify(error, null, 2); // Bedre formatering
+      }
+
+      showConfirmationModal({
+        title: "Error",
+        message: errorMessage,
+        confirmText: "OK",
+      });
     }
   });
 }

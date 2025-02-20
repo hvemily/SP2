@@ -40,7 +40,7 @@ function renderEditForm(post) {
   const formattedEndsAt = formatDateTimeLocal(post.endsAt);
 
   container.innerHTML = `
-    <form id="edit-post-form" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+    <form id="edit-post-form" class="bg-white p-6 border max-w-lg mx-auto">
       <label class="block mb-2 font-medium">Title</label>
       <input type="text" name="title" value="${post.title}" required class="w-full p-2 border rounded">
 
@@ -56,7 +56,7 @@ function renderEditForm(post) {
       <label class="block mt-4 mb-2 font-medium">Tags (comma separated)</label>
       <input type="text" name="tags" value="${post.tags ? post.tags.join(', ') : ''}" placeholder="e.g. Art, Vintage" class="w-full p-2 border rounded">
 
-      <button type="submit" class="bg-customBlue text-white px-4 py-2 rounded mt-4 w-full">Update Post</button>
+      <button type="submit" class="bg-black text-white px-4 py-2 rounded mt-4 w-full">Update Post</button>
     </form>
   `;
 

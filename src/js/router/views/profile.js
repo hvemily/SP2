@@ -1,7 +1,7 @@
 import { fetchProfile } from "../../api/profile/read.js";
 import { updateProfile } from "../../api/profile/update.js"; // <-- Import for oppdatering av profil
-import { deleteListing } from "../../api/post/delete.js";
 import { showConfirmationModal } from "../../ui/global/confirmationModal.js";
+import { onDeleteListing } from "../../ui/post/delete.js";
 /**
  * Initializes the profile page.
  */
@@ -36,36 +36,40 @@ export function renderProfile(profileData) {
   const userListings = Array.isArray(listings) ? listings : [];
 
   container.innerHTML = `
-    <div class="bg-white p-8 rounded-lg shadow-md text-center max-w-3xl mx-auto">
+    <div class="bg-white p-10 rounded-lg shadow-lg text-center max-w-3xl mx-auto border border-gray-300">
+      
+      <!-- Profilseksjon -->
       <div class="flex flex-col items-center">
         <img id="avatar-img" src="${avatar?.url || '/src/assets/icons/default-avatar.png'}" 
-             alt="Profile Avatar" class="w-32 h-32 rounded-full shadow-md border">
-        <h2 class="text-3xl font-bold mt-4">${name || "Unknown User"}</h2>
-        <p class="text-gray-600 text-lg">Credits: <span class="font-bold text-customBlue">${credits ?? "Not available"}</span></p>
+             alt="Profile Avatar" class="w-32 h-32 rounded-full shadow-md border border-gray-400 object-cover">
+        <h2 class="text-4xl font-bold mt-4 text-black tracking-wide">${name || "Unknown User"}</h2>
+        <p class="text-gray-600 text-lg mt-1">Credits: <span class="font-bold text-black">${credits ?? "Not available"}</span></p>
       </div>
 
       <!-- Avatar Update Section -->
-      <div class="mt-6">
+      <div class="mt-8">
         <input type="url" id="avatar-url" placeholder="Enter new avatar URL" 
-               class="px-4 py-2 border rounded w-80 text-gray-700">
+               class="px-4 py-2 border border-gray-400 rounded-md w-80 text-gray-700 focus:outline-none focus:ring-2 focus:ring-black">
         <button id="update-avatar-btn" 
-                class="bg-customBlue text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition">
+                class="bg-black text-white px-6 py-2 rounded-md font-semibold mt-2 transition hover:bg-gray-400">
           Update Avatar
         </button>
       </div>
 
       <!-- Make New Listing Button -->
-      <div class="mt-6">
+      <div class="mt-10">
         <a href="../../listing/create/index.html"
-           class="bg-customBlue text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition">
+           class="bg-black text-white px-6 py-3 rounded-md font-semibold transition hover:bg-gray-400">
            + Make New Listing
         </a>
       </div>
 
       <!-- Listings Section -->
-      <h3 class="text-2xl font-semibold mt-8">Your Listings</h3>
+      <h3 class="text-2xl font-semibold mt-12 text-black border-b pb-2">My Listings</h3>
       <div id="listings-container" class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        ${userListings.length > 0 ? renderListings(userListings) : "<p class='text-gray-500'>You have no active listings.</p>"}
+        ${userListings.length > 0 
+          ? renderListings(userListings) 
+          : "<p class='text-gray-500 italic mt-4'>You have no active listings.</p>"}
       </div>
     </div>
   `;
@@ -73,6 +77,7 @@ export function renderProfile(profileData) {
   // Legg til event listener for oppdatering av avatar
   document.getElementById("update-avatar-btn").addEventListener("click", handleUpdateAvatar);
 }
+
 
 /**
  * Handles updating the user's avatar.
@@ -84,7 +89,7 @@ async function handleUpdateAvatar() {
   const newAvatarUrl = document.getElementById("avatar-url").value.trim();
 
   if (!newAvatarUrl) {
-    alert("Please enter a valid URL for your avatar.");
+    showConfirmationModal("Please enter a valid URL for your avatar.");
     return;
   }
 
@@ -96,7 +101,7 @@ async function handleUpdateAvatar() {
     document.getElementById("avatar-img").src = newAvatarUrl;
   } catch (error) {
     console.error("❌ Failed to update avatar:", error);
-    alert("Failed to update avatar. Please try again.");
+    showConfirmationModal("Please enter a valid URL");
   }
 }
 
@@ -115,22 +120,39 @@ async function handleUpdateAvatar() {
  */
 export function renderListings(listings) {
   return listings
-    .map(listing => `
-      <div class="bg-gray-100 p-5 rounded-lg shadow-md flex flex-col justify-between">
-        <div>
+    .map(listing => {
+      // Standard fallback-bilde hvis ingen media finnes
+      let imageUrl = "/src/assets/icons/default-placeholder.png"; 
+
+      // Sjekk om media-arrayet finnes og har en gyldig URL
+      if (Array.isArray(listing.media) && listing.media.length > 0 && listing.media[0].url !== "string" && listing.media[0].url.trim() !== "") {
+        imageUrl = listing.media[0].url;
+      }
+
+      return `
+      <div class="bg-gray-100 p-5 shadow-md flex flex-col justify-between border hover:scale-105 cursor-pointer">
+        <!-- Listing Image -->
+        <img src="${imageUrl}" alt="${listing.media[0]?.alt || listing.title}" class="w-full h-48 object-cover rounded-md shadow-sm">
+
+        <!-- Listing Content -->
+        <div class="mt-4">
           <h4 class="font-bold text-lg">${listing.title}</h4>
           <p class="text-gray-600 text-sm mt-1">${listing.description || "No description available."}</p>
         </div>
+
+        <!-- Edit/Delete Buttons -->
         <div class="flex justify-between mt-4">
           <a href="/listing/edit/index.html?id=${listing.id}" class="text-blue-500 font-medium hover:underline">Edit</a>
           <button class="text-red-500 font-medium hover:underline delete-btn" data-id="${listing.id}">Delete</button>
         </div>
       </div>
-    `)
+      `;
+    })
     .join("");
 }
 
-// Erstatt standard click-eventet for delete-knapper
+
+
 document.addEventListener("click", async (event) => {
   const deleteBtn = event.target.closest(".delete-btn");
   if (!deleteBtn) return;
@@ -138,27 +160,10 @@ document.addEventListener("click", async (event) => {
   const listingId = deleteBtn.getAttribute("data-id");
   if (!listingId) return;
 
-  // Bruk bekreftelsesmodalen i stedet for native confirm()
-  showConfirmationModal({
-    title: "Delete Listing",
-    message: "Are you sure you want to delete this listing? This action cannot be undone.",
-    confirmText: "Yes, delete it",
-    cancelText: "Cancel",
-    onConfirm: async () => {
-      try {
-        await deleteListing(listingId);
-        showAlert("✅ Listing deleted successfully.", "success");
-        profileInit(); // Refresh profile after deletion
-      } catch (error) {
-        console.error("❌ Failed to delete listing:", error);
-        showAlert("Failed to delete listing.", "error");
-      }
-    },
-    onCancel: () => {
-      console.log("User canceled deletion.");
-    },
-  });
+  // 👉 Bruk eksisterende `onDeleteListing` fra `delete.js`
+  onDeleteListing(listingId);
 });
+
 
 
 

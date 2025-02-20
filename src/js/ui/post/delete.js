@@ -1,4 +1,4 @@
-import { showAlert, showConfirmationModal } from "../../../app.js";
+import { showConfirmationModal, hideConfirmationModal } from "../global/confirmationModal.js"
 import { deleteListing } from "../../api/post/delete.js";
 
 /**
@@ -13,24 +13,58 @@ export async function onDeleteListing(listingId) {
     return;
   }
 
-  // Bruk en gjenbrukbar bekreftelsesmodal med et konfigurasjonsobjekt
+  console.log(`🛑 Attempting to delete listing with ID: ${listingId}`);
+
   showConfirmationModal({
     title: "Delete Listing",
     message: "Are you sure you want to delete this listing? This action cannot be undone.",
     confirmText: "Yes, delete it",
     cancelText: "Cancel",
     onConfirm: async () => {
+      console.log("✅ User confirmed deletion. Deleting...");
+      hideConfirmationModal(); // 🔥 Skjul den første modalen før sletting
+
       try {
-        await deleteListing(listingId);
-        showAlert("Listing deleted successfully!", "success");
-        location.reload(); // Refresh page after delete
+        const response = await deleteListing(listingId);
+        console.log("✅ Deletion response:", response);
+
+        if (!response || response.status !== 204) {
+          throw new Error(`Server responded with status: ${response?.status}`);
+        }
+
+        // ✅ Vis suksessmelding i modalen
+        showConfirmationModal({
+          title: "Success",
+          message: "Listing deleted successfully!",
+          hideButtons: true, // Skjul knapper for å unngå flere klikk
+        });
+
+        // ✅ Vent litt før siden oppdateres
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
+
       } catch (error) {
-        showAlert("Failed to delete listing. Please try again.", "error");
         console.error("❌ Error deleting listing:", error);
+
+        // ✅ Håndter feil og vis i modalen
+        let errorMessage = "Failed to delete listing. Please try again.";
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === "object" && error !== null) {
+          errorMessage = JSON.stringify(error, null, 2);
+        }
+
+        showConfirmationModal({
+          title: "Error",
+          message: errorMessage,
+          confirmText: "OK",
+          onConfirm: () => hideConfirmationModal(),
+        });
       }
     },
     onCancel: () => {
-      console.log("User canceled deletion.");
+      console.log("❌ User canceled deletion.");
     },
   });
 }

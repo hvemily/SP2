@@ -23,33 +23,33 @@ export function showConfirmationModal({
   const confirmBtn = document.getElementById("confirm-button");
   const cancelBtn = document.getElementById("cancel-button");
 
-  if (!modal || !titleEl || !messageEl || !confirmBtn || !cancelBtn) {
-    console.error("❌ Confirmation modal elements not found in DOM.");
-    return;
-  }
-
-  // Sett innholdet
   titleEl.textContent = title;
   messageEl.textContent = message;
+
+  // Oppdater knappetekster
   confirmBtn.textContent = confirmText;
   cancelBtn.textContent = cancelText;
 
-  // Vis modalen
-  modal.classList.remove("hidden");
+  // Fjern eventuelle tidligere event listeners
+  confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+  cancelBtn.replaceWith(cancelBtn.cloneNode(true));
 
-  // Event handlers
-  const handleConfirm = () => {
-    hideConfirmationModal();
+  // Hent nye knapper etter utskifting
+  const newConfirmBtn = document.getElementById("confirm-button");
+  const newCancelBtn = document.getElementById("cancel-button");
+
+  // Sett opp hendelser
+  newConfirmBtn.onclick = () => {
+    modal.classList.add("hidden");
     if (typeof onConfirm === "function") onConfirm();
   };
 
-  const handleCancel = () => {
-    hideConfirmationModal();
+  newCancelBtn.onclick = () => {
+    modal.classList.add("hidden");
     if (typeof onCancel === "function") onCancel();
   };
 
-  confirmBtn.addEventListener("click", handleConfirm, { once: true });
-  cancelBtn.addEventListener("click", handleCancel, { once: true });
+  modal.classList.remove("hidden");
 }
 
 /**

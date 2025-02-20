@@ -107,12 +107,12 @@ async function renderListings(listingsData = null) {
               </div>
             </div>
             <div class="p-4 flex flex-col flex-grow">
-              <h3 class="text-lg font-medium">${listing.title}</h3>
+              <h3 class="text-lg font-bold font-[crimson]">${listing.title}</h3>
               <p class="text-gray-500 text-sm flex-grow">
                 ${listing.description ? listing.description.substring(0, 50) + '...' : "No description available."}
               </p>
-              <p class="text-gray-700 font-medium mt-2">Seller: ${sellerName}</p>
-              <p class="text-customBlue font-semibold mt-2">Current Bid: ${highestBid} | <span class="text-gray-600 font-medium">${timeLeftString}</span></p>
+              <p class="text-black font-medium mt-2">Seller: ${sellerName}</p>
+              <p class="text-black font-semibold mt-2 text-sm">Current Bid: ${highestBid} | <span class="text-gray-600 font-medium">${timeLeftString}</span></p>
 <button onclick="window.location.href='/listing/index.html?id=${listing.id}'"
   class="text-black px-4 py-2 hover:bg-black hover:text-white font-medium mt-2 border">
   View listing
@@ -147,7 +147,7 @@ async function renderFeaturedBids(featuredListings) {
       const imageClass = isPlaceholder ? "w-[50%] h-auto object-contain" : "w-full h-full object-cover";
       return `
         <a href="/listing/index.html?id=${listing.id}" class="block">
-          <div class="bg-white border border-gray-300 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-transform transform hover:scale-105 flex flex-col h-full">
+          <div class="bg-white border border-gray-300 overflow-hidden shadow-md hover:shadow-lg transition-transform transform hover:scale-105 flex flex-col h-full">
             <div class="p-4">
               <div class="w-full h-64 flex items-center justify-center overflow-hidden">
                 <img src="${imageSrc}" alt="${listing.title}" class="${imageClass}">
