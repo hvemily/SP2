@@ -42,7 +42,7 @@ export function renderProfile(profileData) {
       <div class="flex flex-col items-center">
         <img id="avatar-img" src="${avatar?.url || '/src/assets/icons/default-avatar.png'}" 
              alt="Profile Avatar" class="w-32 h-32 rounded-full shadow-md border border-gray-400 object-cover">
-        <h2 class="text-4xl font-bold mt-4 text-black tracking-wide">${name || "Unknown User"}</h2>
+        <h2 class="text-4xl font-bold mt-4 text-black tracking-wide font-[crimson]">${name || "Unknown User"}</h2>
         <p class="text-gray-600 text-lg mt-1">Credits: <span class="font-bold text-black">${credits ?? "Not available"}</span></p>
       </div>
 
@@ -65,7 +65,7 @@ export function renderProfile(profileData) {
       </div>
 
       <!-- Listings Section -->
-      <h3 class="text-2xl font-semibold mt-12 text-black border-b pb-2">My Listings</h3>
+      <h3 class="text-2xl font-semibold mt-12 text-black border-b pb-2 font-[crimson]">My Listings</h3>
       <div id="listings-container" class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         ${userListings.length > 0 
           ? renderListings(userListings) 
@@ -136,7 +136,7 @@ export function renderListings(listings) {
 
         <!-- Listing Content -->
         <div class="mt-4">
-          <h4 class="font-bold text-lg">${listing.title}</h4>
+          <h4 class="font-bold text-lg font-[crimson]">${listing.title}</h4>
           <p class="text-gray-600 text-sm mt-1">${listing.description || "No description available."}</p>
         </div>
 

@@ -1,12 +1,7 @@
-import { showConfirmationModal, hideConfirmationModal } from "../global/confirmationModal.js"
+import { showAlert } from "../../../app.js";
 import { deleteListing } from "../../api/post/delete.js";
+import { showConfirmationModal, hideConfirmationModal } from "../global/confirmationModal.js";
 
-/**
- * Handles the deletion of a listing by its ID.
- * Confirms with the user before deleting the listing, then calls `deleteListing` function.
- *
- * @param {string|number} listingId - The ID of the listing to delete.
- */
 export async function onDeleteListing(listingId) {
   if (!listingId) {
     console.error("❌ listingId is missing in onDeleteListing");
@@ -22,7 +17,7 @@ export async function onDeleteListing(listingId) {
     cancelText: "Cancel",
     onConfirm: async () => {
       console.log("✅ User confirmed deletion. Deleting...");
-      hideConfirmationModal(); // 🔥 Skjul den første modalen før sletting
+      hideConfirmationModal(); // Skjul bekreftelsesmodalen
 
       try {
         const response = await deleteListing(listingId);
@@ -32,14 +27,10 @@ export async function onDeleteListing(listingId) {
           throw new Error(`Server responded with status: ${response?.status}`);
         }
 
-        // ✅ Vis suksessmelding i modalen
-        showConfirmationModal({
-          title: "Success",
-          message: "Listing deleted successfully!",
-          hideButtons: true, // Skjul knapper for å unngå flere klikk
-        });
+        // ✅ Vis grønn suksessmelding
+        showAlert("Listing deleted successfully!", "success");
 
-        // ✅ Vent litt før siden oppdateres
+        // ✅ Oppdater siden etter 1,5 sekunder
         setTimeout(() => {
           location.reload();
         }, 1500);
@@ -47,20 +38,19 @@ export async function onDeleteListing(listingId) {
       } catch (error) {
         console.error("❌ Error deleting listing:", error);
 
-        // ✅ Håndter feil og vis i modalen
         let errorMessage = "Failed to delete listing. Please try again.";
+
+        // 👉 Hvis `error` er en Error-instans, bruk `message`
         if (error instanceof Error) {
           errorMessage = error.message;
-        } else if (typeof error === "object" && error !== null) {
-          errorMessage = JSON.stringify(error, null, 2);
+        }
+        // 👉 Hvis `error` er et objekt, prøv å trekke ut feilmelding
+        else if (typeof error === "object" && error !== null) {
+          errorMessage = error.message || JSON.stringify(error, null, 2);
         }
 
-        showConfirmationModal({
-          title: "Error",
-          message: errorMessage,
-          confirmText: "OK",
-          onConfirm: () => hideConfirmationModal(),
-        });
+        // ✅ Vis rød feilmelding
+        showAlert("Failed to delete listing, try again.", "error");
       }
     },
     onCancel: () => {
