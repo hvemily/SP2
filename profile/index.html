@@ -1,203 +1,213 @@
 <!DOCTYPE html>
-<html lang="no">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listing Details</title>
+    <meta name="description" content="this site contains profile information">
+    <title>My Profile - Vérité Auctions</title>
+
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="/src/assets/icons/v-black.png">
+
+    <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- styles -->
     <link href="/src/css/style.css" rel="stylesheet">
 </head>
-<body class="font-[Inter] bg-gray-100">
 
-    <!-- Bekreftelsesmodal (skjult som standard) -->
-    <div 
-      id="confirmation-modal" 
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999] hidden"
-    >
-      <div class="bg-white text-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h2 id="confirmation-title" class="text-lg font-semibold mb-4">Are you sure?</h2>
-        <p id="confirmation-message" class="text-gray-600 mb-6">
-          <!-- Meldingen oppdateres dynamisk -->
-        </p>
-        <div class="flex justify-end space-x-4">
-          <button id="cancel-button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
-            Cancel
-          </button>
-          <button id="confirm-button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-            Confirm
-          </button>
-        </div>
+<body class="font-[Inter] bg-gray-100 flex flex-col min-h-screen">
+
+  <!-- hidden by default confirmation modal -->
+  <div 
+    id="confirmation-modal" 
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999] hidden"
+  >
+    <div class="bg-white text-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
+      <h2 id="confirmation-title" class="text-lg font-semibold mb-4">Are you sure?</h2>
+      <p id="confirmation-message" class="text-gray-600 mb-6">
+      </p>
+      <div class="flex justify-end space-x-4">
+        <button id="cancel-button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
+          Cancel
+        </button>
+        <button id="confirm-button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+          Confirm
+        </button>
       </div>
     </div>
-    
-    <header class="bg-black text-gray-800 p-4 shadow-md">
-      <div class="container mx-auto grid grid-cols-3 items-center">
-        
-        <!-- Venstre kolonne: logo -->
-        <div class="flex items-center space-x-2">
-          <a href="/index.html">
-            <!-- Logoen skalerer med skjermstørrelsen -->
-            <img 
-              src="/src/assets/icons/va-logo2.png"
-              alt="verite auctions logo"
-              class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 drop-shadow-lg"
-            />
-          </a>
-        </div>
-    
-        <!-- Midt-kolonne: tittel -->
-        <h1 
-          class="text-center text-customGray font-[Crimson-text] drop-shadow-lg
-                 text-2xl sm:text-3xl md:text-4xl"
-        >
-          Vérité Auctions
-        </h1>
-    
-        <!-- Høyre kolonne: meny/hamburger-knapp -->
-        <div class="flex items-center justify-end space-x-6">
-          <!-- Desktop-nav for bruker (synlig fra md og oppover) -->
-          <nav 
-            id="desktop-user-nav"
-            class="hidden md:flex space-x-6 items-center"
-          >
-            <!-- Her setter du Sell with us / Login eller Credits / My Profile / Logout dynamisk i JS -->
-          </nav>
-    
-          <!-- Hamburger-knapp (vises på mindre skjermer) -->
-          <button 
-            id="hamburger-btn"
-            class="md:hidden text-white focus:outline-none"
-          >
-            <!-- Din hamburger-SVG -->
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              class="h-8 w-8" 
-              fill="none"
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path 
-                stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="2"
-                d="M4 8h16M4 16h16"
-              />
-            </svg>
-          </button>
-        </div>
+  </div>
+
+      <!-- alert box -->
+      <div id="alert" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-lg z-50">
+        <span id="alert-message"></span>
+      </div>
+
+  <header class="bg-black text-gray-800 p-4 shadow-md">
+    <div class="container mx-auto grid grid-cols-3 items-center">
+      
+
+      <div class="flex items-center space-x-2">
+        <a href="/index.html">
+          <img 
+            src="/src/assets/icons/va-logo2.png"
+            alt="verite auctions logo"
+            class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 drop-shadow-lg"
+          />
+        </a>
       </div>
   
-      <!-- Sekundær navigasjon -->
-      <nav class="bg-black text-gray-800 p-3 mt-2 w-full sticky top-0 z-50">
-        <!-- Desktop-versjon: synlig fra md og oppover -->
-        <div
-          id="desktop-category-nav"
-          class="hidden md:flex justify-center space-x-6"
-        >
-          <a
-            href="/index.html"
-            class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Home</a
-          >
-          <a
-            href="/listing/category/index.html?category=Art"
-            class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Art</a
-          >
-          <a
-            href="/listing/category/index.html?category=Collectibles"
-            class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Collectibles & Memorabilia</a
-          >
-          <a
-            href="/listing/category/index.html?category=Fashion"
-            class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Fashion</a
-          >
-          <a
-            href="/listing/category/index.html?category=Jewelry"
-            class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Jewelry</a
-          >
-          <a
-            href="/listing/category/index.html?category=Vintage"
-            class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Vintage</a
-          >
-          <a
-            href="/listing/category/index.html?category=Watches"
-            class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Watches</a
-          >
-        </div>
+      <h1 
+        class="text-center text-customGray font-[Crimson-text] drop-shadow-lg
+               text-2xl sm:text-3xl md:text-4xl"
+      >
+        Vérité Auctions
+      </h1>
   
-        <!-- Mobilversjon: skjult som standard -->
-        <div
-          id="mobile-nav-menu"
-          class="flex flex-col md:hidden hidden px-4 py-2 bg-black space-y-3"
+      <div class="flex items-center justify-end space-x-6">
+        <nav 
+          id="desktop-user-nav"
+          class="hidden md:flex space-x-6 items-center"
         >
-          <!-- Kategori-lenker -->
-          <a
-            href="/index.html"
-            class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Home</a
-          >
-          <a
-            href="/listing/category/index.html?category=Art"
-            class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Art</a
-          >
-          <a
-            href="/listing/category/index.html?category=Collectibles"
-            class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Collectibles & Memorabilia</a
-          >
-          <a
-            href="/listing/category/index.html?category=Fashion"
-            class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Fashion</a
-          >
-          <a
-            href="/listing/category/index.html?category=Jewelry"
-            class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Jewelry</a
-          >
-          <a
-            href="/listing/category/index.html?category=Vintage"
-            class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Vintage</a
-          >
-          <a
-            href="/listing/category/index.html?category=Watches"
-            class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
-            >Watches</a
-          >
+        </nav>
   
-          <!-- Bruker-lenker (her settes enten Sell/Login eller Credits/Profile/Logout) -->
-          <div id="mobile-user-nav" class="flex flex-col space-y-2 mt-2">
-            <!-- fylles dynamisk av JS -->
-          </div>
+        <!-- hamburger -->
+        <button 
+          id="hamburger-btn"
+          class="md:hidden text-white focus:outline-none"
+        >
+          <!-- hamburger svg -->
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-8 w-8" 
+            fill="none"
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2"
+              d="M4 8h16M4 16h16"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- secondary nav -->
+    <nav class="bg-black text-gray-800 p-3 mt-2 w-full sticky top-0 z-50">
+      <!-- desktop version: visible by md and up -->
+      <div
+        id="desktop-category-nav"
+        class="hidden md:flex justify-center space-x-6"
+      >
+        <a
+          href="/index.html"
+          class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Home</a
+        >
+        <a
+          href="/listing/category/index.html?category=Art"
+          class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Art</a
+        >
+        <a
+          href="/listing/category/index.html?category=Collectibles"
+          class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Collectibles & Memorabilia</a
+        >
+        <a
+          href="/listing/category/index.html?category=Fashion"
+          class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Fashion</a
+        >
+        <a
+          href="/listing/category/index.html?category=Jewelry"
+          class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Jewelry</a
+        >
+        <a
+          href="/listing/category/index.html?category=Vintage"
+          class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Vintage</a
+        >
+        <a
+          href="/listing/category/index.html?category=Watches"
+          class="text-customGray font-medium transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Watches</a
+        >
+      </div>
+
+      <!-- mobile: default hidden -->
+      <div
+        id="mobile-nav-menu"
+        class="flex flex-col md:hidden hidden px-4 py-2 bg-black space-y-3"
+      >
+        <!-- category links -->
+        <a
+          href="/index.html"
+          class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Home</a
+        >
+        <a
+          href="/listing/category/index.html?category=Art"
+          class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Art</a
+        >
+        <a
+          href="/listing/category/index.html?category=Collectibles"
+          class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Collectibles & Memorabilia</a
+        >
+        <a
+          href="/listing/category/index.html?category=Fashion"
+          class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Fashion</a
+        >
+        <a
+          href="/listing/category/index.html?category=Jewelry"
+          class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Jewelry</a
+        >
+        <a
+          href="/listing/category/index.html?category=Vintage"
+          class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Vintage</a
+        >
+        <a
+          href="/listing/category/index.html?category=Watches"
+          class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
+          >Watches</a
+        >
+
+        <!-- user-links -->
+        <div id="mobile-user-nav" class="flex flex-col space-y-2 mt-2">
         </div>
-      </nav>
-    </header>
+      </div>
+    </nav>
+
+  </header>
 
   <main class="container mx-auto mt-8">
     <h1 class="text-3xl font-bold text-center mb-6">My Profile</h1>
-    <!-- Containeren for profilinformasjon -->
+    <!-- container for profile info -->
     <div id="profile-container"></div>
   </main>
+
   <footer class="bg-black text-white py-6 mt-12">
     <div class="container mx-auto flex flex-col items-center text-center gap-4">
-      <!-- Logo -->
+      <!-- logo -->
       <a href="/index.html">
         <img src="/src/assets/icons/va-logo2.png" alt="Vérité Auctions logo" class="w-12 h-12 drop-shadow-lg">
       </a>
   
-      <!-- Sosiale medier -->
+      <!-- soMe -->
       <div class="flex justify-center space-x-6">
-        <!-- Instagram -->
+        <!-- instagram -->
         <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"
           class="text-white hover:text-gray-300 transition-colors duration-200" aria-label="Instagram">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" class="w-6 h-6">
@@ -213,7 +223,7 @@
           </svg>
         </a>
   
-        <!-- X (Twitter) -->
+        <!-- X (twitter) -->
         <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
           class="text-white hover:text-gray-300 transition-colors duration-200" aria-label="Twitter">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="w-6 h-6">
@@ -223,7 +233,7 @@
           </svg>
         </a>
   
-        <!-- LinkedIn -->
+        <!-- linkedin -->
         <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer"
           class="text-white hover:text-gray-300 transition-colors duration-200" aria-label="LinkedIn">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" class="w-6 h-6">
@@ -233,11 +243,11 @@
         </a>
       </div>
   
-      <!-- Copyright -->
+      <!-- verite auctions copyright -->
       <p class="text-sm">&copy; 2025 Vérité Auctions. All rights reserved.</p>
     </div>
   </footer>
-  <!-- Vi bruker app.js for routing -->
+  <!-- scripts -->
   <script type="module" src="/src/app.js"></script>
 </body>
 </html>

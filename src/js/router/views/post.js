@@ -138,7 +138,7 @@ function renderListingDetail(listing) {
     const bidAmount = Number(document.getElementById("bidAmount").value);
   
     if (isNaN(bidAmount) || bidAmount <= 0) {
-      showAlert("Invalid bid", "Please enter a valid bid amount.");
+      showAlert("Invalid bid", "Please enter a valid bid amount.", "error");
       return;
     }
   
@@ -192,59 +192,32 @@ async function handleBid(listingId, bidAmount) {
       const errorData = await response.json().catch(() => ({}));
       console.log("🚨 Bid error response:", errorData);
 
-      // Forsøk å hente en meningsfull feilmelding fra API-et
       let errorMsg = "Failed to place bid.";
       if (errorData?.errors?.length > 0) {
-        errorMsg = errorData.errors.map(err => err.message).join("\n");
+        errorMsg = errorData.errors[0].message; // Hent første feilmelding fra API
       } else if (errorData?.message) {
         errorMsg = errorData.message;
-      } else if (response.status === 400) {
-        errorMsg = "Bid amount is too low. Please place a higher bid.";
       }
 
-      throw new Error(`Status: ${response.status} - ${errorMsg}`);
+      throw new Error(errorMsg);
     }
 
     // Oppdater brukerens credits lokalt
     userCredits -= bidAmount;
     localStorage.setItem(creditsKey, userCredits);
 
-    showAlert("Bid Placed!", `Your bid of ${bidAmount} credits has been placed successfully.`, "success");
+    // ✅ Riktig grønn success-melding
+    showAlert(`Bid Placed! Your bid of ${bidAmount} credits has been placed successfully.`, "success");
+
   } catch (error) {
     console.error("❌ handleBid error:", error);
-    showAlert("Bid Error", `Failed to place bid: ${error.message}`, "error");
+
+    // ✅ Feilmelding fra API vises riktig
+    showAlert(`Bid Error: ${error.message}`, "error");
   }
 }
 
 
-
-
-/**
- * Henter budene for en gitt listing.
- * @param {string} listingId - ID-en til listing-en
- * @returns {Promise<Array>} - En liste med bud
- */
-export async function fetchBidsForListing(listingId) {
-  try {
-    const response = await fetch(`${API_BASE}/auction/listings/${listingId}?_bids=true`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Noroff-API-Key": API_KEY,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch bids: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data?.bids ?? []; // Returner budene eller en tom liste
-  } catch (error) {
-    console.error("❌ Error fetching bids:", error);
-    return [];
-  }
-}
 
 
 /**

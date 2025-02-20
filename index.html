@@ -17,7 +17,7 @@
 
 <body class="font-[Inter] bg-gray-100">
 
-  <!-- Bekreftelsesmodal (skjult som standard) -->
+  <!-- confirmation modal -->
   <div 
     id="confirmation-modal" 
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999] hidden"
@@ -25,7 +25,6 @@
     <div class="bg-white text-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
       <h2 id="confirmation-title" class="text-lg font-semibold mb-4">Are you sure?</h2>
       <p id="confirmation-message" class="text-gray-600 mb-6">
-        <!-- Meldingen oppdateres dynamisk -->
       </p>
       <div class="flex justify-end space-x-4">
         <button id="cancel-button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
@@ -41,10 +40,8 @@
   <header class="bg-black text-gray-800 p-4 shadow-md">
     <div class="container mx-auto grid grid-cols-3 items-center">
       
-      <!-- Venstre kolonne: logo -->
       <div class="flex items-center space-x-2">
         <a href="/index.html">
-          <!-- Logoen skalerer med skjermstørrelsen -->
           <img 
             src="/src/assets/icons/va-logo2.png"
             alt="verite auctions logo"
@@ -53,7 +50,6 @@
         </a>
       </div>
   
-      <!-- Midt-kolonne: tittel -->
       <h1 
         class="text-center text-customGray font-[Crimson-text] drop-shadow-lg
                text-2xl sm:text-3xl md:text-4xl"
@@ -61,22 +57,19 @@
         Vérité Auctions
       </h1>
   
-      <!-- Høyre kolonne: meny/hamburger-knapp -->
       <div class="flex items-center justify-end space-x-6">
-        <!-- Desktop-nav for bruker (synlig fra md og oppover) -->
         <nav 
           id="desktop-user-nav"
           class="hidden md:flex space-x-6 items-center"
         >
-          <!-- Her setter du Sell with us / Login eller Credits / My Profile / Logout dynamisk i JS -->
         </nav>
   
-        <!-- Hamburger-knapp (vises på mindre skjermer) -->
+        <!-- hamburger btn -->
         <button 
           id="hamburger-btn"
           class="md:hidden text-white focus:outline-none"
         >
-          <!-- Din hamburger-SVG -->
+          <!-- hamburger svg -->
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             class="h-8 w-8" 
@@ -97,7 +90,7 @@
 
     <!-- Sekundær navigasjon -->
     <nav class="bg-black text-gray-800 p-3 mt-2 w-full sticky top-0 z-50">
-      <!-- Desktop-versjon: synlig fra md og oppover -->
+      <!-- desktop version: visible from md and up -->
       <div
         id="desktop-category-nav"
         class="hidden md:flex justify-center space-x-6"
@@ -139,12 +132,12 @@
         >
       </div>
 
-      <!-- Mobilversjon: skjult som standard -->
+      <!-- mobile version; hidden as standard -->
       <div
         id="mobile-nav-menu"
         class="flex flex-col md:hidden hidden px-4 py-2 bg-black space-y-3"
       >
-        <!-- Kategori-lenker -->
+        <!-- category links -->
         <a
           href="/index.html"
           class="text-customGray font-medium py-1 transition-transform duration-200 hover:scale-105 hover:text-white"
@@ -181,14 +174,12 @@
           >Watches</a
         >
 
-        <!-- Bruker-lenker (her settes enten Sell/Login eller Credits/Profile/Logout) -->
         <div id="mobile-user-nav" class="flex flex-col space-y-2 mt-2">
-          <!-- fylles dynamisk av JS -->
         </div>
       </div>
     </nav>
 
-    <!-- Search Bar -->
+    <!-- search bar -->
     <div class="flex justify-center mt-4">
       <input
         id="searchInput"
@@ -242,14 +233,14 @@
   </main>
   <footer class="bg-black text-white py-6 mt-12">
     <div class="container mx-auto flex flex-col items-center text-center gap-4">
-      <!-- Logo -->
+      <!-- logo -->
       <a href="/index.html">
         <img src="/src/assets/icons/va-logo2.png" alt="Vérité Auctions logo" class="w-12 h-12 drop-shadow-lg">
       </a>
   
-      <!-- Sosiale medier -->
+      <!-- soMe -->
       <div class="flex justify-center space-x-6">
-        <!-- Instagram -->
+        <!-- instagram -->
         <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"
           class="text-white hover:text-gray-300 transition-colors duration-200" aria-label="Instagram">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" class="w-6 h-6">
@@ -265,7 +256,7 @@
           </svg>
         </a>
   
-        <!-- X (Twitter) -->
+        <!-- X (twitter) -->
         <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
           class="text-white hover:text-gray-300 transition-colors duration-200" aria-label="Twitter">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="w-6 h-6">
@@ -275,7 +266,7 @@
           </svg>
         </a>
   
-        <!-- LinkedIn -->
+        <!-- linkedin -->
         <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer"
           class="text-white hover:text-gray-300 transition-colors duration-200" aria-label="LinkedIn">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" class="w-6 h-6">
@@ -285,11 +276,11 @@
         </a>
       </div>
   
-      <!-- Copyright -->
+      <!-- verite auctions copyright -->
       <p class="text-sm">&copy; 2025 Vérité Auctions. All rights reserved.</p>
     </div>
   </footer>
-
+  <!-- scripts -->
   <script type="module" src="/src/app.js"></script>
 </body>
 </html>

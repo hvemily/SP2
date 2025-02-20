@@ -1,6 +1,6 @@
+import { showAlert } from "../../../app.js";
 import { fetchProfile } from "../../api/profile/read.js";
 import { updateProfile } from "../../api/profile/update.js"; // <-- Import for oppdatering av profil
-import { showConfirmationModal } from "../../ui/global/confirmationModal.js";
 import { onDeleteListing } from "../../ui/post/delete.js";
 /**
  * Initializes the profile page.
@@ -89,19 +89,19 @@ async function handleUpdateAvatar() {
   const newAvatarUrl = document.getElementById("avatar-url").value.trim();
 
   if (!newAvatarUrl) {
-    showConfirmationModal("Please enter a valid URL for your avatar.");
+    showAlert("Please enter a valid URL for your avatar." , "error");
     return;
   }
 
   try {
     await updateProfile({ avatar: { url: newAvatarUrl } }); // 🔥 Send avatar som objekt
-    alert("✅ Avatar updated successfully!");
+    showAlert("✅ Avatar updated successfully!");
 
     // Oppdater avatar-bildet uten å måtte reloade hele siden
     document.getElementById("avatar-img").src = newAvatarUrl;
   } catch (error) {
     console.error("❌ Failed to update avatar:", error);
-    showConfirmationModal("Please enter a valid URL");
+    showAlert("Please enter a valid URL", "error");
   }
 }
 

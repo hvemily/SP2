@@ -126,7 +126,7 @@ export function hideLoader() {
   if (loader) loader.classList.add("hidden");
 }
 
-export function showAlert(title, message, type = "success") {
+export function showAlert(message, type = "success") {
   const alertBox = document.getElementById("alert");
   const alertMessage = document.getElementById("alert-message");
 
@@ -135,7 +135,7 @@ export function showAlert(title, message, type = "success") {
     return;
   }
 
-  alertMessage.innerHTML = `<strong>${title}</strong>: ${message}`;
+  alertMessage.textContent = message;
   alertBox.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-lg z-50 text-white ${
     type === "success" ? "bg-green-500" : "bg-red-500"
   }`;
@@ -146,4 +146,7 @@ export function showAlert(title, message, type = "success") {
     alertBox.classList.add("hidden");
   }, 3000);
 }
+
+
+
 
