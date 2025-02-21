@@ -1,50 +1,28 @@
-// src/js/api/auth/login.js
-import { API_AUTH_LOGIN } from "../constants";
-import { apiRequest } from "../../ui/utilities/apiRequest";
+import { API_AUTH_LOGIN } from "../constants.js";
+import { apiRequest } from "../../ui/utilities/apiRequest.js";
 import { showAlert } from "../../../app.js";
 
 export async function login({ email, password }) {
   try {
-    const response = await apiRequest(API_AUTH_LOGIN, "POST", { email, password });
-    console.log("Login response:", response);
+    const { data } = await apiRequest(API_AUTH_LOGIN, "POST", { email, password });
 
-    if (!response) {
-      showAlert("Login failed: No response from server.", "error");
-      console.error("❌ Response is undefined");
-      return null;
+    if (!data?.accessToken || !data?.name) {
+      throw new Error("Missing token or name.");
     }
 
-    const data = response.data || response;
-    if (!data) {
-      showAlert("Login failed: Response data is undefined.", "error");
-      console.error("❌ Response data is undefined:", response);
-      return null;
-    }
+    // ✅ Lagre brukerdata
+    localStorage.setItem("token", data.accessToken);
+    localStorage.setItem("name", data.name);
+    localStorage.setItem("email", data.email);
 
-    const token = data.accessToken;
-    const name = data.name;
+    showAlert("Login successful! Redirecting...", "success");
 
-    if (token && name) {
-      console.log("🔑 Storing user credentials...");
-      localStorage.setItem("token", token);
-      localStorage.setItem("name", name);
-
-      showAlert("Login successful! Redirecting...", "success");
-
-      setTimeout(() => {
-        console.log("🚀 Redirecting to homepage...");
-        window.location.href = "/";
-      }, 500);
-
-      return data;
-    } else {
-      showAlert("Login failed: Missing token or name.", "error");
-      console.error("❌ Login response missing token or name:", data);
-      return null;
-    }
+    setTimeout(() => (window.location.href = "/"), 500);
+    return data;
   } catch (error) {
     console.error("❌ Login error:", error);
-    showAlert("Login failed: " + error.message, "error");
+    showAlert(`Login failed: ${error.message}`, "error");
     return null;
   }
 }
+

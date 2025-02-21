@@ -1,6 +1,6 @@
 import { showAlert } from "../../../app.js";
 import { deleteListing } from "../../api/post/delete.js";
-import { showConfirmationModal, hideConfirmationModal } from "../global/confirmationModal.js";
+import { showConfirmationModal, hideConfirmationModal } from "../../ui/global/confirmationModal.js";
 
 export async function onDeleteListing(listingId) {
   if (!listingId) {
@@ -37,19 +37,6 @@ export async function onDeleteListing(listingId) {
 
       } catch (error) {
         console.error("❌ Error deleting listing:", error);
-
-        let errorMessage = "Failed to delete listing. Please try again.";
-
-        // 👉 Hvis `error` er en Error-instans, bruk `message`
-        if (error instanceof Error) {
-          errorMessage = error.message;
-        }
-        // 👉 Hvis `error` er et objekt, prøv å trekke ut feilmelding
-        else if (typeof error === "object" && error !== null) {
-          errorMessage = error.message || JSON.stringify(error, null, 2);
-        }
-
-        // ✅ Vis rød feilmelding
         showAlert("Failed to delete listing, try again.", "error");
       }
     },

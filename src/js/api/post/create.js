@@ -1,4 +1,5 @@
-import { API_BASE, API_KEY } from "../constants.js";
+import { API_LISTINGS } from "../constants.js";
+import { apiRequest } from "../../ui/utilities/apiRequest.js";
 
 /**
  * Oppretter en ny listing ved å sende en POST-request til API-et.
@@ -6,29 +7,5 @@ import { API_BASE, API_KEY } from "../constants.js";
  * @returns {Promise<Object>} - Den opprettede listing-en fra API-et.
  */
 export async function createListing(listingData) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    throw new Error("No authentication token found.");
-  }
-  
-  try {
-    const response = await fetch(`${API_BASE}/auction/listings`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        "X-Noroff-API-Key": API_KEY
-      },
-      body: JSON.stringify(listingData),
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Failed to create listing: ${response.statusText}`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error("❌ Error creating listing:", error);
-    throw error;
-  }
+  return apiRequest(API_LISTINGS, "POST", listingData, true);
 }

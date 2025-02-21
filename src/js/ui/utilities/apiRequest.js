@@ -1,43 +1,50 @@
-import { API_KEY } from "../../api/constants";
+import { API_KEY } from "../../api/constants.js";
 
+/**
+ * En felles funksjon for API-kall.
+ * @param {string} endpoint - API-endepunktet.
+ * @param {string} method - HTTP-metoden (GET, POST, PUT, DELETE).
+ * @param {Object} [body=null] - Request body (valgfritt).
+ * @param {boolean} [requiresAuth=false] - Om forespørselen krever autorisasjon.
+ * @returns {Promise<Object|null>} - JSON-responsen eller null hvis tom respons.
+ */
 export async function apiRequest(endpoint, method = "GET", body = null, requiresAuth = false) {
-  const headers = {
+    const headers = {
       "Content-Type": "application/json",
       "X-Noroff-API-Key": API_KEY,
-  };
-
-  if (requiresAuth) {
+    };
+  
+    if (requiresAuth) {
       const token = localStorage.getItem("token");
       if (token) {
-          headers["Authorization"] = `Bearer ${token}`;
+        headers["Authorization"] = `Bearer ${token}`;
       }
-  }
-
-  const config = { method, headers };
-  if (body) {
+    }
+  
+    const config = { method, headers };
+    if (body) {
       config.body = JSON.stringify(body);
-  }
-
-  try {
-      console.log(`🚀 Sending request to: ${endpoint} with method: ${method}`);
-      console.log("📦 Request body:", body);
-
+    }
+  
+    try {
+      console.log(`🚀 API Request: ${method} ${endpoint}`);
       const response = await fetch(endpoint, config);
-      console.log("🔄 Response received:", response);
-
-      const responseData = await response.json();
-      console.log("📦 Full API response:", responseData);
-
-      if (!response.ok) {
-          console.error(`❌ API Request Error (${response.status}):`, responseData);
-          throw new Error(responseData.errors?.[0]?.message || "Unknown API error");
+  
+      // ✅ Håndterer 204 No Content
+      if (response.status === 204) {
+        return { success: true, status: response.status };
       }
-
+  
+      const responseData = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(responseData.errors?.[0]?.message || response.statusText);
+      }
+  
       return responseData;
-  } catch (error) {
-      console.error("❌ API Request Catch Error:", error);
+    } catch (error) {
+      console.error("❌ API Request Error:", error);
       throw error;
+    }
   }
-}
-
-console.log("🔑 API_KEY:", API_KEY);
+  

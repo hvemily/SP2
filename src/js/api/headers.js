@@ -1,25 +1,20 @@
-import { API_KEY } from "./constants";
+import { API_KEY } from "./constants.js";
 
 /**
  * Generates headers for API requests.
- * 
- * @returns {Headers} A Headers object with the appropriate API key and authorization token (if available).
+ * @param {boolean} [requiresAuth=false] - Whether to include Authorization header.
+ * @returns {Object} Headers object with API key and optional authorization token.
  */
-export function headers() {
-  const headers = new Headers();
+export function headers(requiresAuth = false) {
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Noroff-API-Key": API_KEY,
+  };
 
-  // Include API key if available
-  if (API_KEY) {
-    headers.append("X-Noroff-API-Key", API_KEY);
+  if (requiresAuth) {
+    const token = localStorage.getItem("token");
+    if (token) headers["Authorization"] = `Bearer ${token}`;
   }
 
-  // Include authorization token if available
-  const token = localStorage.getItem("token");
-  if (token) {
-    headers.append("Authorization", `Bearer ${token}`);
-  }
-
-  headers.append("Content-Type", "application/json");
-  
   return headers;
 }

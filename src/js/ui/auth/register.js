@@ -20,21 +20,27 @@ export async function onRegister(event) {
   try {
     showLoader(); // Vis spinner
     const response = await register({ name, email, password });
+
     // Ved vellykket registrering, sett brukerens credits (hvis ikke allerede satt)
     const creditsKey = `credits_${email}`;
     if (!localStorage.getItem(creditsKey)) {
       localStorage.setItem(creditsKey, 1000);
     }
+
+    hideLoader(); // Skjul spinner før meldingen vises
     showAlert("Registration successful!", "success");
-    // Etter registrering sendes brukeren til login-siden:
-    window.location.href = "/auth/login/index.html";
+
+    // Vent 3 sekunder før redirect
+    setTimeout(() => {
+      window.location.href = "/auth/login/index.html";
+    }, 3000);
+
   } catch (error) {
+    hideLoader(); // Skjul spinner på feil også
     if (error.message.includes("already exists")) {
       showAlert("This email is already registered. Please use another email.", "error");
     } else {
       showAlert(`Registration failed: ${error.message}`, "error");
     }
-  } finally {
-    hideLoader(); // Skjul spinner
   }
 }

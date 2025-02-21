@@ -1,85 +1,63 @@
 import { API_LISTINGS } from "../constants.js";
+import { apiRequest } from "../../ui/utilities/apiRequest.js";
 
+/**
+ * Henter listings med paginering.
+ * @param {number} limit - Antall listings per side.
+ * @param {number} page - Hvilken side som skal hentes.
+ * @returns {Promise<Array>} - Liste over listings.
+ */
 export async function fetchListings(limit = 8, page = 1) {
-    console.log(`🚀 Fetching listings: limit=${limit}, page=${page}`);
-  
-    if (!API_LISTINGS) {
-      console.error("❌ API_LISTINGS is undefined! Check your configuration.");
-      return [];
-    }
-  
-    try {
-      const response = await fetch(
-        `${API_LISTINGS}?sort=created&_order=desc&_seller=true&_bids=true&active=true&_page=${page}&_limit=${limit}`
-      );
-  
-      console.log("🔄 Response received:", response);
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const responseData = await response.json();
-      console.log("📦 Full API response:", responseData);
-  
-      if (Array.isArray(responseData.data)) {
-        return responseData.data.sort((a, b) => new Date(b.created) - new Date(a.created));
-      } else {
-        console.error("❌ Unexpected API response format:", responseData);
-        return [];
-      }
-    } catch (error) {
-      console.error("❌ Error fetching listings:", error);
-      return [];
-    }
+  try {
+    const responseData = await apiRequest(
+      `${API_LISTINGS}?sort=created&_order=desc&_seller=true&_bids=true&active=true&_page=${page}&_limit=${limit}`
+    );
+    return Array.isArray(responseData.data)
+      ? responseData.data.sort((a, b) => new Date(b.created) - new Date(a.created))
+      : [];
+  } catch (error) {
+    console.error("❌ Error fetching listings:", error);
+    return [];
   }
-  
+}
 
-
-// 🚀 Hent annonser med de høyeste budene (Featured Bids)
+/**
+ * Henter de annonser med de høyeste budene.
+ * @param {number} limit - Antall annonser som skal returneres.
+ * @returns {Promise<Array>} - Liste over de høyeste budene.
+ */
 export async function fetchFeaturedBids(limit = 4) {
-    try {
-        const response = await fetch(
-            `${API_LISTINGS}?_seller=true&_bids=true&_active=true&_limit=50`
-        );
+  try {
+    const responseData = await apiRequest(
+      `${API_LISTINGS}?_seller=true&_bids=true&_active=true&_limit=50`
+    );
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+    const allListings = responseData.data || [];
 
-        const json = await response.json();
-        const allListings = json.data || [];
-
-        // Filtrer annonser med bud og sorter etter høyeste bud
-        const sortedByHighestBid = allListings
-            .filter(listing => listing.bids?.length > 0)
-            .sort((a, b) => {
-                const maxBidA = Math.max(...a.bids.map(bid => bid.amount), 0);
-                const maxBidB = Math.max(...b.bids.map(bid => bid.amount), 0);
-                return maxBidB - maxBidA;
-            });
-
-        return sortedByHighestBid.slice(0, limit); // Returner kun de X høyeste
-    } catch (error) {
-        console.error("Error fetching featured bids:", error);
-        return [];
-    }
+    return allListings
+      .filter((listing) => listing.bids?.length > 0)
+      .sort(
+        (a, b) =>
+          Math.max(...b.bids.map((bid) => bid.amount), 0) -
+          Math.max(...a.bids.map((bid) => bid.amount), 0)
+      )
+      .slice(0, limit);
+  } catch (error) {
+    console.error("❌ Error fetching featured bids:", error);
+    return [];
+  }
 }
 
 /**
  * Henter data for én spesifikk listing basert på ID.
  * @param {string} id - ID-en til listing.
- * @returns {Promise<Object>} Listing-data
+ * @returns {Promise<Object>} - Data for den aktuelle listing-en.
  */
 export async function fetchSingleListing(id) {
   try {
-    const response = await fetch(`${API_LISTINGS}/${id}?_bids=true&_seller=true`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch listing with id ${id}: ${response.status}`);
-    }
-    const responseData = await response.json();
-    // Her kommer responseData i form { data: {...}, meta: {...} }
-    // => Returner bare data-delen:
+    const responseData = await apiRequest(
+      `${API_LISTINGS}/${id}?_bids=true&_seller=true`
+    );
     return responseData.data;
   } catch (error) {
     console.error("❌ fetchSingleListing error:", error);

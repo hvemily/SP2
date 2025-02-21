@@ -1,4 +1,5 @@
-import { API_BASE, API_KEY } from "../constants.js";
+import { API_BASE } from "../constants.js";
+import { apiRequest } from "../../ui/utilities/apiRequest.js";
 
 /**
  * Updates the user's profile information.
@@ -6,34 +7,8 @@ import { API_BASE, API_KEY } from "../constants.js";
  * @returns {Promise<Object>} - The updated profile data.
  */
 export async function updateProfile(profileData) {
-  const token = localStorage.getItem("token");
-  const username = localStorage.getItem("name"); // Henter brukernavnet
+  const username = localStorage.getItem("name");
+  if (!username) throw new Error("No username found in localStorage.");
 
-  if (!token || !username) {
-    throw new Error("No authentication token or username found.");
-  }
-
-  try {
-    const response = await fetch(`${API_BASE}/auction/profiles/${username}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        "X-Noroff-API-Key": API_KEY, // 🔥 API-nøkkel må være med
-      },
-      body: JSON.stringify(profileData),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to update profile: ${response.status} - ${errorText}`);
-    }
-
-    const updatedProfile = await response.json();
-    console.log("✅ Profile updated:", updatedProfile);
-    return updatedProfile;
-  } catch (error) {
-    console.error("❌ Error updating profile:", error);
-    throw error;
-  }
+  return apiRequest(`${API_BASE}/auction/profiles/${username}`, "PUT", profileData, true);
 }
