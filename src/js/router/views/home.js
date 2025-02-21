@@ -5,7 +5,7 @@ let currentPage = 0;
 const postsPerPage = 8;
 let allListings = [];
 
-// Funksjon for å vise listings på gjeldende side
+//Function to show listings on the current page
 function renderCurrentPage() {
   console.log("🔄 Rendering page:", currentPage);
   const startIndex = currentPage * postsPerPage;
@@ -14,7 +14,7 @@ function renderCurrentPage() {
   updatePaginationButtons();
 }
 
-// Oppdater paginering
+//Updating pagination
 function updatePaginationButtons() {
   const prevBtn = document.getElementById("prevPage");
   const nextBtn = document.getElementById("nextPage");
@@ -22,7 +22,7 @@ function updatePaginationButtons() {
   if (nextBtn) nextBtn.disabled = (currentPage + 1) * postsPerPage >= allListings.length;
 }
 
-// Oppretter pagineringsknapper
+// Creates pagination btns
 function createPaginationControls() {
   if (document.getElementById("prevPage") && document.getElementById("nextPage")) return;
 
@@ -54,7 +54,7 @@ function createPaginationControls() {
   updatePaginationButtons();
 }
 
-// Renderer listings i DOM
+// Renderer listings in DOM
 async function renderListings(listingsData = []) {
   const listingsContainer = document.getElementById("auction-listings");
   if (!listingsContainer) return console.error("❌ No container found for listings!");
@@ -64,7 +64,7 @@ async function renderListings(listingsData = []) {
     : "<p class='text-gray-500 text-center'>No listings available.</p>";
 }
 
-// Henter og viser featured bids
+// Fetches and shows featured bids
 async function renderFeaturedBids(featuredListings = []) {
   const featuredContainer = document.getElementById("featured-auctions");
   if (!featuredContainer) return console.error("❌ No container found for featured bids!");
@@ -74,7 +74,7 @@ async function renderFeaturedBids(featuredListings = []) {
     : "<p class='text-gray-500 text-center'>No featured bids available.</p>";
 }
 
-// Lager HTML for et listing-kort
+//Makes HTML for listing card
 function createListingCard({ id, title, description, seller, bids, media, endsAt }) {
   const highestBid = bids?.length
     ? `${Math.max(...bids.map(({ amount }) => amount))} credits`
@@ -108,7 +108,7 @@ function createListingCard({ id, title, description, seller, bids, media, endsAt
   `;
 }
 
-// Beregner tid igjen før auksjonen slutter
+//Time before listing ends
 function calculateTimeLeft(endsAt) {
   if (!endsAt) return "No end date";
   
@@ -125,7 +125,7 @@ function calculateTimeLeft(endsAt) {
   return `${days}d ${hours}h ${minutes}m left`;
 }
 
-// Søkefunksjon
+// Search function
 function setupSearch() {
   const searchInput = document.getElementById("searchInput");
   if (!searchInput) return;
@@ -141,7 +141,7 @@ function setupSearch() {
   });
 }
 
-// Init-funksjon
+// Init funksjon
 export default async function homeInit() {
   console.log("🏠 Initializing home page...");
 

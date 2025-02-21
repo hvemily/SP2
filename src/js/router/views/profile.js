@@ -4,7 +4,7 @@ import { updateProfile } from "../../api/profile/update.js";
 import { onDeleteListing } from "../../ui/post/delete.js";
 
 /**
- * Initialiserer profilen.
+ * Initializing profile.
  */
 document.addEventListener("DOMContentLoaded", profileInit);
 
@@ -21,8 +21,8 @@ export async function profileInit() {
 }
 
 /**
- * Renderer brukerens profil.
- * @param {Object} profileData - Brukerdata fra API-et.
+ * Render user profile.
+ * @param {Object} profileData - user data from API-et.
  */
 function renderProfile(profileData) {
   const container = document.getElementById("profile-container");
@@ -66,7 +66,7 @@ function renderProfile(profileData) {
 }
 
 /**
- * Håndterer oppdatering av avatar.
+ * Handling update of avatar
  */
 async function handleUpdateAvatar() {
   const newAvatarUrl = document.getElementById("avatar-url").value.trim();
@@ -83,8 +83,8 @@ async function handleUpdateAvatar() {
 }
 
 /**
- * Genererer HTML for brukerens annonser.
- * @param {Array} listings - Liste med annonser.
+ *  Generating html for users listings
+ * @param {Array} listings - List of listings.
  * @returns {string} HTML markup.
  */
 function renderListings(listings) {
@@ -109,7 +109,7 @@ function renderListings(listings) {
 }
 
 /**
- * Lytter etter sletting av annonser.
+ * Listening for deletion of listings
  */
 document.addEventListener("click", async (event) => {
   const deleteBtn = event.target.closest(".delete-btn");

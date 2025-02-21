@@ -17,24 +17,25 @@ export async function onDeleteListing(listingId) {
     cancelText: "Cancel",
     onConfirm: async () => {
       console.log("✅ User confirmed deletion. Deleting...");
-      hideConfirmationModal(); // Skjul bekreftelsesmodalen
+      hideConfirmationModal(); 
 
       try {
         const response = await deleteListing(listingId);
         console.log("✅ Deletion response:", response);
 
-        // 🔹 Hvis API-et returnerer undefined eller ingen statuskode, anta at det var vellykket
         if (!response || response.status === undefined || response.status === 204) {
           console.log("✅ Listing deleted successfully (assuming success due to no response body).");
           showAlert("Listing deleted successfully!", "success");
 
-          // 🔹 Fjern listing umiddelbart fra DOM uten å reloade
           document.querySelector(`[data-id="${listingId}"]`)?.closest(".listing-card")?.remove();
+
+          setTimeout(() => {
+            location.reload();
+          }, 1500);
 
           return;
         }
 
-        // Hvis vi får en respons, men status ikke er 204, håndter feilen
         throw new Error(`Unexpected response: ${response?.status || "No status returned"}`);
 
       } catch (error) {

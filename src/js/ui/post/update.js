@@ -3,8 +3,8 @@ import { updatePost } from "../../api/post/update.js";
 import { showAlert } from "../../../app.js";
 
 /**
- * Håndterer innsending av redigeringsskjemaet for et innlegg.
- * @param {Event} event - Skjemaets submit-hendelse.
+ * Handling POST of edit form
+ * @param {Event} event - form's submit event.
  */
 export async function onUpdatePost(event) {
   event.preventDefault();
@@ -21,13 +21,13 @@ export async function onUpdatePost(event) {
     return;
   }
   
-  // Konverter endsAt til ISO-format; datetime-local gir f.eks. "2023-08-24T15:30" som må konverteres
+
   const endsAt = new Date(endsAtRaw).toISOString();
   
-  // Behandle tags: splitt på komma, trim og fjern tomme verdier
+
   const tags = tagsRaw ? tagsRaw.split(",").map(tag => tag.trim()).filter(tag => tag) : [];
   
-  // Sett opp media som en array med objekt (inkluderer alt-tekst)
+
   const media = mediaUrl ? [{ url: mediaUrl, alt: title }] : [];
   
   const updatedData = {
@@ -38,7 +38,7 @@ export async function onUpdatePost(event) {
     tags,
   };
 
-  // Hent post-ID fra URL (forutsetter at det finnes i query-string som ?id=...)
+
   const postId = new URLSearchParams(window.location.search).get("id");
   if (!postId) {
     showAlert("No post ID found.", "error");
@@ -48,7 +48,7 @@ export async function onUpdatePost(event) {
   try {
     await updatePost(postId, updatedData);
     showAlert("Post updated successfully!", "success");
-    // Redirect til My Profile etter 2 sekunder
+    // Redirect
     setTimeout(() => {
       window.location.href = "/profile/index.html";
     }, 2000);

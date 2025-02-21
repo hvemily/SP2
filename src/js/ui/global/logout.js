@@ -1,7 +1,7 @@
 import { showConfirmationModal } from "../global/confirmationModal.js";
 
 /**
- * Setter opp en event listener for logout-knappen med bekreftelsesmodal.
+ * Setting up event listener for logout btn with modal
  *
  * @param {string} logoutButtonId - ID-en til logout-knappen.
  */

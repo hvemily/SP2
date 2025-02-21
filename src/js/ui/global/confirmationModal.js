@@ -1,13 +1,13 @@
 /**
  * Viser en gjenbrukbar bekreftelsesmodal.
  *
- * @param {Object} options - Konfigurasjonsobjekt for modalen.
- * @param {string} options.title - Tittelen i modalen.
- * @param {string} options.message - Hovedmeldingen i modalen.
- * @param {string} [options.confirmText="Confirm"] - Tekst på bekreftelsesknappen.
- * @param {string} [options.cancelText="Cancel"] - Tekst på avbryt-knappen.
- * @param {function} [options.onConfirm] - Kalles når brukeren bekrefter handlingen.
- * @param {function} [options.onCancel] - Kalles når brukeren avbryter handlingen.
+ * @param {Object} options - Configuration object for modal
+ * @param {string} options.title - Title in Modal
+ * @param {string} options.message - Main message in modal
+ * @param {string} [options.confirmText="Confirm"] - Text to confirm btn
+ * @param {string} [options.cancelText="Cancel"] - Text to cancel btn
+ * @param {function} [options.onConfirm] - Calls when user confirms action
+ * @param {function} [options.onCancel] - Calls when user cancels action
  */
 export function showConfirmationModal({
   title,
@@ -30,15 +30,15 @@ export function showConfirmationModal({
   confirmBtn.textContent = confirmText;
   cancelBtn.textContent = cancelText;
 
-  // Fjern eventuelle tidligere event listeners
+  // Remove eg earlies listeners
   confirmBtn.replaceWith(confirmBtn.cloneNode(true));
   cancelBtn.replaceWith(cancelBtn.cloneNode(true));
 
-  // Hent nye knapper etter utskifting
+  //Get new btns after change
   const newConfirmBtn = document.getElementById("confirm-button");
   const newCancelBtn = document.getElementById("cancel-button");
 
-  // Sett opp hendelser
+  // Set up actions
   newConfirmBtn.onclick = () => {
     modal.classList.add("hidden");
     if (typeof onConfirm === "function") onConfirm();
@@ -53,7 +53,7 @@ export function showConfirmationModal({
 }
 
 /**
- * Skjuler bekreftelsesmodalen.
+ * Hides ConfirmationModal.
  */
 export function hideConfirmationModal() {
   const modal = document.getElementById("confirmation-modal");

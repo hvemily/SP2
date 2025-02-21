@@ -2,10 +2,10 @@ import { API_LISTINGS, API_BASE } from "../constants.js";
 import { apiRequest } from "../../ui/utilities/apiRequest.js";
 
 /**
- * Henter listings med paginering.
- * @param {number} limit - Antall listings per side.
- * @param {number} page - Hvilken side som skal hentes.
- * @returns {Promise<Array>} - Liste over listings.
+ * Fetching listing with pagination
+ * @param {number} limit - Number of listings per page
+ * @param {number} page - Which page to be fetched
+ * @returns {Promise<Array>} - List of listings. 
  */
 
 
@@ -17,15 +17,15 @@ export async function fetchListings(limit = 8, page = 1) {
 
   console.log("✅ API Response:", response);
 
-  return response.data || [];  // <-- Sørg for at den returnerer en array
+  return response.data || [];  
 }
 
 
 
 /**
- * Henter de annonser med de høyeste budene.
- * @param {number} limit - Antall annonser som skal returneres.
- * @returns {Promise<Array>} - Liste over de høyeste budene.
+ * Fetch listings with highest bids
+ * @param {number} limit - Number of listings to return
+ * @returns {Promise<Array>} - List over highest bids
  */
 export async function fetchFeaturedBids(limit = 4) {
   try {
@@ -50,9 +50,9 @@ export async function fetchFeaturedBids(limit = 4) {
 }
 
 /**
- * Henter data for én spesifikk listing basert på ID.
- * @param {string} id - ID-en til listing.
- * @returns {Promise<Object>} - Data for den aktuelle listing-en.
+ * Fetching data for a specifiv listing based on ID
+ * @param {string} id - ID of the listing.
+ * @returns {Promise<Object>} - Data for the chosen listing
  */
 export async function fetchSingleListing(id) {
   try {

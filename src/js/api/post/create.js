@@ -2,9 +2,9 @@ import { API_LISTINGS } from "../constants.js";
 import { apiRequest } from "../../ui/utilities/apiRequest.js";
 
 /**
- * Oppretter en ny listing ved å sende en POST-request til API-et.
- * @param {Object} listingData - Dataene for den nye listing-en.
- * @returns {Promise<Object>} - Den opprettede listing-en fra API-et.
+ * Creating a new listing by sending a POST-req to the API.
+ * @param {Object} listingData - Data for the new listing
+ * @returns {Promise<Object>} - The created listing from the API
  */
 export async function createListing(listingData) {
   return apiRequest(API_LISTINGS, "POST", listingData, true);

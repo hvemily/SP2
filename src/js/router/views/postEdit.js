@@ -4,8 +4,8 @@ import { onUpdatePost } from "../../ui/post/update.js";
 import { showAlert } from "../../../app.js";
 
 /**
- * Starter redigering av et innlegg.
- * @param {string} postId - ID-en til posten som skal redigeres.
+ * Starting rendering of a post
+ * @param {string} postId - ID of the post to be edited
  */
 export default async function editListing(postId) {
   if (!postId) {
@@ -29,8 +29,8 @@ export default async function editListing(postId) {
 }
 
 /**
- * Renders et preutfylt redigeringsskjema med eksisterende postdata.
- * @param {Object} post - Post-objekt med eksisterende data.
+ * Renders pre filled edit form with existing form data
+ * @param {Object} post - Post obejct with existing data.
  */
 function renderEditForm(post) {
   const container = document.getElementById("edit-post-container");
@@ -39,7 +39,7 @@ function renderEditForm(post) {
     return;
   }
 
-  // Formater `endsAt` for datetime-local input
+  // Formatting `endsAt` for datetime-local input
   const formattedEndsAt = post.endsAt ? formatDateTimeLocal(post.endsAt) : "";
 
   container.innerHTML = `
@@ -72,9 +72,9 @@ function renderEditForm(post) {
 }
 
 /**
- * Formaterer en ISO-dato til "YYYY-MM-DDTHH:MM" for datetime-local input.
+ * Formatting ea ISO-dato to "YYYY-MM-DDTHH:MM" for datetime-local input.
  * @param {string} isoDate - ISO-dato
- * @returns {string} Formatert dato eller tom string hvis datoen er ugyldig.
+ * @returns {string} Formatetted dato or empty string if date is disregarded
  */
 function formatDateTimeLocal(isoDate) {
   if (!isoDate) return "";

@@ -1,9 +1,9 @@
 import { showConfirmationModal } from "../global/confirmationModal.js";
 
 /**
- * Setter opp en event listener for logout-knappen med bekreftelsesmodal.
+ * Event listener for logout btn with confirmationModal
  *
- * @param {string} logoutButtonId - ID-en til logout-knappen.
+ * @param {string} logoutButtonId - ID logout button.
  */
 export function setLogoutListener(logoutButtonId) {
   const logoutBtn = document.getElementById(logoutButtonId);

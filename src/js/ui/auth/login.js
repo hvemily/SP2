@@ -17,7 +17,7 @@ export async function onLogin(event) {
   try {
     showLoader();
 
-    // Kall login()-funksjonen, som returnerer brukerdata (token og name)
+    //Call login() functuin that returns user data (token and name)
     const user = await login({ email, password });
     if (!user) return;
 
@@ -25,12 +25,12 @@ export async function onLogin(event) {
     const name = user.name;
 
     if (token && name) {
-      // Lagre brukerdata og e-post for å kunne hente credits senere
+      // Store used data and email to get credits 
       localStorage.setItem("token", token);
       localStorage.setItem("name", name);
       localStorage.setItem("email", email);
 
-      // Hent brukerens credits fra localStorage med en nøkkel basert på e-post
+      //Get users credits from localstorage with a key based on email
       const creditsKey = `credits_${email}`;
       let userCredits = localStorage.getItem(creditsKey);
       if (!userCredits) {

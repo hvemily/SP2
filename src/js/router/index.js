@@ -1,5 +1,5 @@
 export default async function router(pathname = window.location.pathname) {
-  // Normaliser pathen: fjerner "index.html" og trailing slash, og fjerner query string
+  // Normalizing path: removes "index.html" og trailing slash, and removes query string
   pathname = pathname.replace(/index\.html$/, "").replace(/\/$/, "") || "/";
   pathname = pathname.split("?")[0];
   console.log("Normalized path:", pathname);
@@ -83,7 +83,6 @@ export default async function router(pathname = window.location.pathname) {
         .catch((error) => console.error("❌ Failed to import post.js for listing details:", error));
       break;
       
-    // Legg til en case for kategori-siden
     case "/listing/category":
       console.log("📂 Navigating to category page...");
       import("../router/views/category.js")

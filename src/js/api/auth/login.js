@@ -10,7 +10,7 @@ export async function login({ email, password }) {
       throw new Error("Missing token or name.");
     }
 
-    // ✅ Lagre brukerdata
+    //  store user data
     localStorage.setItem("token", data.accessToken);
     localStorage.setItem("name", data.name);
     localStorage.setItem("email", data.email);

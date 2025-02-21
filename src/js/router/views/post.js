@@ -23,7 +23,7 @@ export default async function initListingDetail() {
 }
 
 /**
- * Viser detaljert informasjon om en listing i DOM-en.
+ * Detailed info on the listing in DOM
  */
 function renderListingDetail(listing) {
   const container = document.getElementById("category-listings");
@@ -69,7 +69,7 @@ function renderListingDetail(listing) {
 }
 
 /**
- * Beregner tid igjen for auksjonen.
+ * Time before auction ends
  */
 function calculateTimeLeft(endsAt) {
   const timeLeft = new Date(endsAt) - new Date();
@@ -83,7 +83,7 @@ function calculateTimeLeft(endsAt) {
 }
 
 /**
- * Legger til event listeners for å håndtere bud.
+ * Event listener to handle bid
  */
 function addBidEventListeners(listingId) {
   document.getElementById("placeBidBtn").addEventListener("click", () => {
@@ -100,7 +100,7 @@ function addBidEventListeners(listingId) {
 
     try {
       await handleBid(listingId, bidAmount);
-      await initListingDetail(); // Oppdaterer siden med nye bud
+      await initListingDetail(); 
     } catch (error) {
       console.error("❌ Failed to place bid:", error);
       showAlert("An error occurred while placing your bid. Please try again.");
@@ -109,7 +109,7 @@ function addBidEventListeners(listingId) {
 }
 
 /**
- * Håndterer innsending av bud.
+ * Handling send in on bids
  */
 async function handleBid(listingId, bidAmount) {
   const email = localStorage.getItem("email");
@@ -133,7 +133,7 @@ async function handleBid(listingId, bidAmount) {
 }
 
 /**
- * Henter og viser budene for en listing.
+ * Fetches and shows bids for listing
  */
 async function showBids(listingId) {
   const bidsContainer = document.getElementById("bids-container");
@@ -155,7 +155,7 @@ async function showBids(listingId) {
 }
 
 /**
- * Legger til event-listener på "View Bids"-knappen.
+ * Event listener on the view bids btn
  */
 document.addEventListener("DOMContentLoaded", () => {
   const viewBidsBtn = document.getElementById("viewBidsBtn");

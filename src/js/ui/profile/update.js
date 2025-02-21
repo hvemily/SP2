@@ -31,7 +31,7 @@ export async function onUpdateProfile(event) {
     showAlert("Profile updated successfully!", "success");
     setTimeout(() => {
       window.location.reload();
-    }, 2000); // Vent 2 sekunder før siden oppdateres
+    }, 2000); 
   } catch (error) {
     showAlert("Failed to update profile. Please try again.", "error");
     console.error("Error updating profile:", error.message);

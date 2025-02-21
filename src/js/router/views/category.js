@@ -3,8 +3,8 @@ import { API_BASE } from "../../api/constants.js";
 
 
 /**
- * Henter kategori-parameteren fra URL-en.
- * @returns {string|null} Den valgte kategorien i små bokstaver, eller null hvis ingen er satt.
+ * Gets category param from URL
+ * @returns {string|null} Chosen category in small letters, or null if none are set
  */
 export function getCategoryFromURL() {
   const category = new URLSearchParams(window.location.search).get("category");
@@ -12,7 +12,7 @@ export function getCategoryFromURL() {
 }
 
 /**
- * Render kategori-siden: Henter alle listings, filtrerer basert på kategori, og viser dem i DOM-en.
+ * Rendering category page: fetching listings, filtering based on category and viewing in DOM
  */
 export async function renderCategoryPage() {
   const category = getCategoryFromURL();
@@ -24,7 +24,7 @@ export async function renderCategoryPage() {
   }
 
   try {
-    // 🔹 Henter alle listings med vanlig fetch
+    // Fetching all listings with normal fetch
     const response = await fetch(`${API_BASE}/auction/listings?sort=created&_order=desc&_seller=true&_bids=true&active=true&_limit=50`);
     
     if (!response.ok) {
@@ -34,8 +34,7 @@ export async function renderCategoryPage() {
     const data = await response.json();
     const allListings = data.data || [];
 
-    // Filtrer listings basert på kategori (sjekker tags, tittel og beskrivelse)
-// Filtrer listings basert på kategori (sjekker tags, tittel og beskrivelse)
+    //Filtering listings based on category. Checks tags, title and description)
 const filteredListings = allListings.filter(({ tags, title, description }) => {
   return [title, description]
     .filter(Boolean) // Fjern null/undefined verdier
@@ -55,9 +54,9 @@ const filteredListings = allListings.filter(({ tags, title, description }) => {
 }
 
 /**
- * Lager HTML for et listing-kort.
- * @param {Object} listing - En enkelt listing.
- * @returns {string} HTML-streng for listing-kortet.
+ * Makes HTML for a listing card
+ * @param {Object} listing - One listing.
+ * @returns {string} HTML-string for listing card.
  */
 export function createListingCard({ id, title, description, seller, bids, media }) {
   const highestBid = bids?.length ? `${Math.max(...bids.map(({ amount }) => amount))} credits` : "No bids yet";
@@ -85,5 +84,5 @@ export function createListingCard({ id, title, description, seller, bids, media 
   `;
 }
 
-// Eksporter default slik at routeren kan kalle denne funksjonen
+//Exporting default so the router can call the function
 export default renderCategoryPage;

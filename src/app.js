@@ -1,14 +1,14 @@
 import "../src/css/style.css";
 import router from "./js/router/index.js";
 import { setLogoutListener } from "./js/ui/global/logout.js";
-import { fetchProfile } from "./js/api/profile/read.js"; // ✅ Henter ekte credits fra API-et
+import { fetchProfile } from "./js/api/profile/read.js"; 
 import { showConfirmationModal } from "./js/ui/global/confirmationModal.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 App loaded, running router...");
   router(window.location.pathname);
-  await updateNavigation(); // ✅ Vent på oppdatering av navigasjonen
-  setupHamburgerMenu();    // ✅ Sett opp hamburger-løsningen
+  await updateNavigation(); 
+  setupHamburgerMenu();    
 });
 
 window.addEventListener("popstate", () => {
@@ -17,7 +17,7 @@ window.addEventListener("popstate", () => {
 });
 
 /**
- * Oppdaterer navigasjonen for innloggede/utloggede brukere.
+ * Updating nav for logged in/logged out users
  */
 async function updateNavigation() {
   const desktopNav = document.getElementById("desktop-user-nav");
@@ -45,10 +45,9 @@ async function updateNavigation() {
       desktopNav.innerHTML = loggedInHTML;
       mobileNav.innerHTML = loggedInHTML;
 
-      // ✅ Sett opp logout-knappen riktig på både desktop og mobil
+
       setLogoutListeners();
 
-      // 🔥 Observer mobile-nav for endringer, så vi kan sette opp logout igjen hvis nødvendig
       const observer = new MutationObserver(() => {
         setLogoutListeners();
       });
@@ -69,19 +68,19 @@ async function updateNavigation() {
 }
 
 /**
- * Setter opp logout-knappen for både desktop og mobil.
+ * Sets up logout btn for desktop and mobile
  */
 function setLogoutListeners() {
   const logoutButtons = document.querySelectorAll("#logout");
 
   logoutButtons.forEach((btn) => {
-    btn.removeEventListener("click", handleLogout); // Unngå duplisering av event listeners
+    btn.removeEventListener("click", handleLogout); 
     btn.addEventListener("click", handleLogout);
   });
 }
 
 /**
- * Håndterer logout-knappen.
+ * Handle logout btn
  */
 function handleLogout() {
   showConfirmationModal({
@@ -101,8 +100,8 @@ function handleLogout() {
 }
 
 /**
- * Setter opp hamburger-menyen for mobilvisning.
- * Toggler #mobile-nav-menu når man klikker på #hamburger-btn.
+ * Setting up hamburger for mobile
+ * Toggling #mobile-nav-menu when #hamburger-btn is clicked.
  */
 function setupHamburgerMenu() {
   const hamburgerBtn = document.getElementById("hamburger-btn");
@@ -115,7 +114,7 @@ function setupHamburgerMenu() {
   }
 }
 
-// Globale funksjoner for loader og alert
+// Global functions for loader and alert
 export function showLoader() {
   const loader = document.getElementById("loader");
   if (loader) loader.classList.remove("hidden");

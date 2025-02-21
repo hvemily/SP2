@@ -1,12 +1,12 @@
 import { API_KEY } from "../../api/constants.js";
 
 /**
- * En felles funksjon for alle API-kall.
- * @param {string} endpoint - API-endepunktet (f.eks. `/auth/login`).
- * @param {string} method - HTTP-metoden (GET, POST, PUT, DELETE).
- * @param {Object} [body] - Data som skal sendes med (valgfritt).
- * @param {boolean} [requiresAuth=false] - Om forespørselen krever autorisasjon.
- * @returns {Promise<Object|null>} - JSON-responsen fra API-et eller null for DELETE.
+ * Joint function for all API call
+ * @param {string} endpoint - API endpoint
+ * @param {string} method - HTTP method (GET, POST, PUT, DELETE).
+ * @param {Object} [body] - Data to send with
+ * @param {boolean} [requiresAuth=false] - If the request require authorization
+ * @returns {Promise<Object|null>} - JSON response from API or null for DELETE.
  */
 export async function apiRequest(endpoint, method = "GET", body = null, requiresAuth = false) {
   const headers = {
@@ -35,13 +35,12 @@ export async function apiRequest(endpoint, method = "GET", body = null, requires
       throw new Error(`Error ${response.status}: ${errorText || response.statusText}`);
     }
 
-    // 🔥 Sjekk om responsen har innhold før du forsøker å parse JSON
     const contentType = response.headers.get("Content-Type");
     if (contentType && contentType.includes("application/json")) {
       return await response.json();
     }
 
-    return null; // Returner null hvis DELETE-responsen er tom
+    return null; // Returns null if DELETE response is empty
   } catch (error) {
     console.error("❌ API Request Error:", error);
     throw error;

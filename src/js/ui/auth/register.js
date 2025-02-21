@@ -11,32 +11,32 @@ export async function onRegister(event) {
   const password = form.password.value.trim();
   const confirmPassword = form.confirmPassword.value.trim();
 
-  // Sjekk at passordene stemmer overens
+  // Checking if passwords match
   if (password !== confirmPassword) {
     showAlert("Passwords do not match.", "error");
     return;
   }
 
   try {
-    showLoader(); // Vis spinner
+    showLoader(); // spinner
     const response = await register({ name, email, password });
 
-    // Ved vellykket registrering, sett brukerens credits (hvis ikke allerede satt)
+    //By successful registration, set user credits if not already set
     const creditsKey = `credits_${email}`;
     if (!localStorage.getItem(creditsKey)) {
       localStorage.setItem(creditsKey, 1000);
     }
 
-    hideLoader(); // Skjul spinner før meldingen vises
+    hideLoader(); //Hide spinner
     showAlert("Registration successful!", "success");
 
-    // Vent 3 sekunder før redirect
+    // 3 sekunder before redirect
     setTimeout(() => {
       window.location.href = "/auth/login/index.html";
     }, 3000);
 
   } catch (error) {
-    hideLoader(); // Skjul spinner på feil også
+    hideLoader(); // Hide spinner on errors too
     if (error.message.includes("already exists")) {
       showAlert("This email is already registered. Please use another email.", "error");
     } else {

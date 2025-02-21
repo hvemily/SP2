@@ -7,7 +7,7 @@ import { apiRequest } from "../../ui/utilities/apiRequest.js";
  * @throws {Error} Throws an error if the request fails.
  */
 export async function fetchProfile() {
-  const username = localStorage.getItem("name"); // Henter username fra localStorage
+  const username = localStorage.getItem("name"); 
   if (!username) throw new Error("No username found in localStorage.");
 
   console.log("📡 Fetching profile for:", username);
