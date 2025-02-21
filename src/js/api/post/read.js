@@ -1,4 +1,4 @@
-import { API_LISTINGS } from "../constants.js";
+import { API_LISTINGS, API_BASE } from "../constants.js";
 import { apiRequest } from "../../ui/utilities/apiRequest.js";
 
 /**
@@ -7,19 +7,20 @@ import { apiRequest } from "../../ui/utilities/apiRequest.js";
  * @param {number} page - Hvilken side som skal hentes.
  * @returns {Promise<Array>} - Liste over listings.
  */
+
+
 export async function fetchListings(limit = 8, page = 1) {
-  try {
-    const responseData = await apiRequest(
-      `${API_LISTINGS}?sort=created&_order=desc&_seller=true&_bids=true&active=true&_page=${page}&_limit=${limit}`
-    );
-    return Array.isArray(responseData.data)
-      ? responseData.data.sort((a, b) => new Date(b.created) - new Date(a.created))
-      : [];
-  } catch (error) {
-    console.error("❌ Error fetching listings:", error);
-    return [];
-  }
+  const response = await apiRequest(
+      `${API_BASE}/auction/listings?sort=created&_order=desc&_seller=true&_bids=true&active=true&_page=${page}&_limit=${limit}`,
+      "GET"
+  );
+
+  console.log("✅ API Response:", response);
+
+  return response.data || [];  // <-- Sørg for at den returnerer en array
 }
+
+
 
 /**
  * Henter de annonser med de høyeste budene.

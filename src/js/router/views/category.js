@@ -1,6 +1,6 @@
 // router/views/category.js
-import { apiRequest } from "../../ui/utilities/apiRequest.js";
-import { setLogoutListener } from "../../ui/global/logout.js";
+import { API_BASE } from "../../api/constants.js";
+
 
 /**
  * Henter kategori-parameteren fra URL-en.
@@ -24,11 +24,25 @@ export async function renderCategoryPage() {
   }
 
   try {
-    // 🔹 Bruker apiRequest for å holde alle API-kall konsistente
-    const allListings = await apiRequest(`/auction/listings?sort=created&_order=desc&_seller=true&_bids=true&active=true&_limit=50`);
-    const filteredListings = allListings?.filter(({ tags, title, description }) => {
-      return [tags, title, description].some((field) => field?.toLowerCase().includes(category));
-    }) || [];
+    // 🔹 Henter alle listings med vanlig fetch
+    const response = await fetch(`${API_BASE}/auction/listings?sort=created&_order=desc&_seller=true&_bids=true&active=true&_limit=50`);
+    
+    if (!response.ok) {
+      throw new Error(`Error fetching listings: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const allListings = data.data || [];
+
+    // Filtrer listings basert på kategori (sjekker tags, tittel og beskrivelse)
+// Filtrer listings basert på kategori (sjekker tags, tittel og beskrivelse)
+const filteredListings = allListings.filter(({ tags, title, description }) => {
+  return [title, description]
+    .filter(Boolean) // Fjern null/undefined verdier
+    .some((field) => typeof field === "string" && field.toLowerCase().includes(category)) ||
+    (Array.isArray(tags) && tags.some((tag) => typeof tag === "string" && tag.toLowerCase().includes(category)));
+});
+
 
     listingsContainer.innerHTML = filteredListings.length
       ? filteredListings.map(createListingCard).join("")
@@ -51,13 +65,13 @@ export function createListingCard({ id, title, description, seller, bids, media 
   const imageClass = imageSrc.includes("v-black.png") ? "w-[50%] h-auto object-contain" : "w-full h-full object-cover";
 
   return `
-    <a href="/listing/index.html?id=${id}" class="block">
+    <a href="/listing/index.html?id=${id}" class="block mb-10">
       <div class="bg-white border border-gray-300 overflow-hidden shadow-md hover:shadow-lg transition-transform transform hover:scale-105 flex flex-col h-full">
         <div class="p-4 flex items-center justify-center overflow-hidden h-64">
           <img src="${imageSrc}" alt="${title}" class="${imageClass}">
         </div>
         <div class="p-4 flex flex-col flex-grow">
-          <h3 class="text-lg font-bold font-[crimson]">${title}</h3>
+          <h3 class="text-lg font-bold font-[Inter]">${title}</h3>
           <p class="text-gray-500 text-sm flex-grow">${description?.substring(0, 50) || "No description available."}...</p>
           <p class="text-black font-medium mt-2">Seller: ${seller?.name || "Unknown Seller"}</p>
           <p class="text-black font-semibold mt-2">Current Bid: ${highestBid}</p>
