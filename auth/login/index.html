@@ -18,29 +18,26 @@
     <link href="/src/css/style.css" rel="stylesheet">
 </head>
 
-<body class="bg-black flex flex-col min-h-screen items-center justify-center text-white">
+<body class="bg-black flex flex-col min-h-screen items-center justify-center text-white bg-cover bg-center backdrop-blur-sm" 
+      style="background-image: url(../../src/assets/images/verite-bg.jpg);">
+
     
     <!-- hidden by default alert box -->
     <div id="alert" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-lg z-50">
         <span id="alert-message"></span>
     </div>
 
-    <!-- header -->
-    <header class="absolute top-8 text-5xl font-[Crimson] text-center w-full mt-10">
-        Vérité Auctions
-    </header>
-
     <!-- loginform container -->
     <main class="flex flex-col items-center justify-center flex-grow">
-        <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-80 text-white">
+        <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl shadow-xl w-80 text-white mt-36">
             <h2 class="text-xl font-medium text-center mb-4 font-[Crimson]">Welcome</h2>
             <form name="login" class="flex flex-col space-y-4" method="post" id="login-form">
                 <input type="email" name="email" placeholder="Email"
-                    class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+                    class="p-3 bg-black text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
                 <input type="password" name="password" placeholder="Password"
-                    class="p-3 bg-white/20 text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+                    class="p-3 bg-black text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
                 <button type="submit"
-                    class="bg-white text-black py-2 rounded-lg font-semibold hover:bg-gray-300 transition">
+                    class="bg-white text-black py-2 rounded-lg font-semibold hover:bg-black hover:text-white transition">
                     Login
                 </button>
             </form>
