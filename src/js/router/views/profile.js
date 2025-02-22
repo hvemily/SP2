@@ -9,11 +9,11 @@ import { onDeleteListing } from "../../ui/post/delete.js";
 document.addEventListener("DOMContentLoaded", profileInit);
 
 export async function profileInit() {
-  console.log("👤 Loading profile...");
+  
 
   try {
     const profile = await fetchProfile();
-    console.log("✅ Profile fetched:", profile);
+    
     renderProfile(profile);
   } catch (error) {
     console.error("❌ Failed to load profile:", error);
@@ -55,7 +55,7 @@ function renderProfile(profileData) {
         </a>
       </div>
 
-      <h3 class="text-2xl font-semibold mt-12 text-black border-b pb-2 font-[crimson]">My Listings</h3>
+      <h3 class="text-2xl font-medium mt-12 text-black border-b pb-2 font-[crimson]">My Listings</h3>
       <div id="listings-container" class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         ${userListings.length ? renderListings(userListings) : "<p class='text-gray-500 italic mt-4'>You have no active listings.</p>"}
       </div>

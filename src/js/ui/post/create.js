@@ -48,11 +48,11 @@ export function initCreateListing() {
       tags
     };
 
-    console.log("Listing Data:", listingData);
+    
 
     try {
       const createdListing = await createListing(listingData);
-      console.log("✅ Listing created successfully:", createdListing);
+      
       
       // success message
       showAlert("Listing created successfully!", "success");

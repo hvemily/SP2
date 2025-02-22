@@ -15,8 +15,6 @@ export async function fetchListings(limit = 8, page = 1) {
       "GET"
   );
 
-  console.log("✅ API Response:", response);
-
   return response.data || [];  
 }
 

@@ -19,12 +19,12 @@ export function setLogoutListener(logoutButtonId) {
       confirmText: "Yes, log out",
       cancelText: "No, stay",
       onConfirm: () => {
-        console.log("👋 Logging out... Clearing localStorage.");
+        
         localStorage.clear();
         window.location.href = "/";
       },
       onCancel: () => {
-        console.log("User canceled logout.");
+        
       },
     });
   });

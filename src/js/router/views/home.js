@@ -7,7 +7,7 @@ let allListings = [];
 
 //Function to show listings on the current page
 function renderCurrentPage() {
-  console.log("🔄 Rendering page:", currentPage);
+  
   const startIndex = currentPage * postsPerPage;
   const endIndex = startIndex + postsPerPage;
   renderListings(allListings.slice(startIndex, endIndex));
@@ -143,11 +143,11 @@ function setupSearch() {
 
 // Init funksjon
 export default async function homeInit() {
-  console.log("🏠 Initializing home page...");
+  
 
   try {
     const listings = await fetchListings();
-    console.log("🔍 API response for listings:", listings); // Debugging
+    // Debugging
 
     if (!listings || !Array.isArray(listings)) {
       console.error("❌ API response is not in expected format:", listings);
@@ -165,7 +165,7 @@ export default async function homeInit() {
 
   try {
     const featuredBids = await fetchFeaturedBids();
-    console.log("🔍 API response for featured bids:", featuredBids);
+    
 
     if (!featuredBids || !Array.isArray(featuredBids)) {
       console.error("❌ Featured bids response is not in expected format:", featuredBids);

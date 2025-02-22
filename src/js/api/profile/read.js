@@ -9,8 +9,6 @@ import { apiRequest } from "../../ui/utilities/apiRequest.js";
 export async function fetchProfile() {
   const username = localStorage.getItem("name"); 
   if (!username) throw new Error("No username found in localStorage.");
-
-  console.log("📡 Fetching profile for:", username);
-  
+    
   return apiRequest(`${API_BASE}/auction/profiles/${username}?_listings=true`, "GET", null, true);
 }

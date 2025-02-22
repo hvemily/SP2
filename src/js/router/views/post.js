@@ -33,9 +33,9 @@ function renderListingDetail(listing) {
   const titleElement = document.getElementById("category-title");
   if (titleElement) titleElement.textContent = listing.title || "Untitled";
 
-  const highestBid = listing.bids?.length 
-    ? `${Math.max(...listing.bids.map(bid => bid.amount))} credits` 
-    : "No bids yet";
+  const currentHighestBid = listing.bids?.length 
+    ? Math.max(...listing.bids.map(bid => Number(bid.amount))) 
+    : 0;
 
   const timeLeft = calculateTimeLeft(listing.endsAt);
 
@@ -51,7 +51,7 @@ function renderListingDetail(listing) {
         <p class="text-gray-700 font-medium">Seller: ${listing.seller?.name || "Unknown"}</p>
         <p class="text-gray-700 font-medium">Bids so far: <span id="bidCount">${listing.bids?.length || 0}</span></p>
         <p class="text-customBlue font-semibold mt-2">
-          Highest Bid: <span id="currentHighestBid">${highestBid}</span> | 
+          Highest Bid: <span id="currentHighestBid">${currentHighestBid} credits</span> | 
           <span class="text-gray-600 font-medium">${timeLeft}</span>
         </p>
         <div class="mt-4 flex flex-col gap-4">
@@ -66,7 +66,7 @@ function renderListingDetail(listing) {
     </div>
   `;
 
-  addBidEventListeners(listing.id);
+  addBidEventListeners(listing.id, currentHighestBid);
 }
 
 /**
@@ -86,7 +86,7 @@ function calculateTimeLeft(endsAt) {
 /**
  * Event listener to handle bid
  */
-function addBidEventListeners(listingId) {
+function addBidEventListeners(listingId, currentHighestBid) {
   document.getElementById("placeBidBtn").addEventListener("click", () => {
     document.getElementById("bidForm").classList.toggle("hidden");
   });
@@ -94,20 +94,31 @@ function addBidEventListeners(listingId) {
   document.getElementById("bidForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const bidAmount = Number(document.getElementById("bidAmount").value);
+    const highestBid = Number(currentHighestBid); // Sikrer at det er et tall
 
-    if (isNaN(bidAmount) || bidAmount <= 0) {
-      return showAlert("Invalid bid", "Please enter a valid bid amount.", "error");
+    // 🔍 Sjekk at budet er en gyldig verdi
+    if (isNaN(bidAmount) || bidAmount <= 0 || bidAmount <= highestBid) {
+      return showAlert(
+        `Your bid must be higher than the current highest bid (${highestBid} credits).`,
+        "Invalid Bid",
+        "error"
+      );
     }
 
     try {
       await handleBid(listingId, bidAmount);
-      await initListingDetail(); 
+      await initListingDetail(); // Oppdaterer siden etter et vellykket bud
     } catch (error) {
-      console.error("❌ Failed to place bid:", error);
-      showAlert("An error occurred while placing your bid. Please try again.");
+      let errorMessage = "An error occurred while placing your bid. Please try again.";
+      if (error.errors && Array.isArray(error.errors)) {
+        errorMessage = error.errors[0]?.message || errorMessage;
+      }
+
+      showAlert("Bid Error", errorMessage, "error");
     }
   });
 }
+
 
 /**
  * Handling send in on bids
@@ -119,7 +130,7 @@ async function handleBid(listingId, bidAmount) {
   }
 
   const creditsKey = `credits_${email}`;
-  let userCredits = Number(localStorage.getItem(creditsKey)) || 0;
+  const userCredits = Number(localStorage.getItem(creditsKey)) || 0;
 
   if (bidAmount > userCredits) {
     return showAlert("Insufficient Credits", `Not enough credits! You only have ${userCredits} credits.`, "error");
@@ -128,43 +139,29 @@ async function handleBid(listingId, bidAmount) {
   try {
     const response = await apiRequest(`${API_LISTINGS}/${listingId}/bids`, "POST", { amount: bidAmount }, true);
 
-    // 🔍 Sjekk om API-et returnerer feilmeldinger
-    if (response && response.errors) {
-      const errorMessages = response.errors.map(error => error.message).join(" ");
-      
-      console.log("🔎 API error messages:", errorMessages); // Debugging
+    // 👀 Logg hele API-responsen
 
-      if (errorMessages.includes("You do not have enough balance to bid this amount")) {
-        return showAlert("Bid Error", "You do not have enough credits to place this bid.", "error");
-      }
-
-      if (errorMessages.includes("Your bid must be higher than the current bid")) {
-        return showAlert("Bid Error", "Your bid must be higher than the current highest bid.", "error");
-      }
-
-      return showAlert("Bid Error", errorMessages, "error");
-    }
-
-    // ✅ Oppdaterer brukerens kreditter lokalt
     localStorage.setItem(creditsKey, userCredits - bidAmount);
-    showAlert(`Bid Placed! Your bid of ${bidAmount} credits has been placed successfully.`, "success");
-
+    showAlert(`Your bid of ${bidAmount} credits has been placed successfully.`, "success");
   } catch (error) {
     console.error("❌ API Bid Error:", error);
 
-    let errorMessage = "An error occurred while placing your bid. Please try again.";
-    
-    if (error.message.includes("You do not have enough balance to bid this amount")) {
-      errorMessage = "You do not have enough credits to place this bid.";
-    } else if (error.message.includes("Your bid must be higher than the current bid")) {
-      errorMessage = "Your bid must be higher than the current highest bid.";
+    if (error.errors && Array.isArray(error.errors)) {
+      // 👀 Logg feilmeldingene fra API-et
+
+      const firstError = error.errors[0]?.message || "An unknown error occurred.";
+
+      if (firstError.includes("Your bid must be higher than the current bid")) {
+        
+      }
+
+      return showAlert("Bid Error", firstError, "error");
     }
 
-    showAlert("Bid Error", errorMessage, "error");
+    // Fallback error message
+    showAlert("Bid Error", "An unexpected error occurred. Please try again.", "error");
   }
 }
-
-
 
 
 /**

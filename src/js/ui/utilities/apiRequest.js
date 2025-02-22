@@ -1,12 +1,14 @@
-import { API_KEY } from "../../api/constants.js";
+import { API_KEY } from "../../api/constants";
+
 
 /**
- * Joint function for all API call
- * @param {string} endpoint - API endpoint
- * @param {string} method - HTTP method (GET, POST, PUT, DELETE).
- * @param {Object} [body] - Data to send with
- * @param {boolean} [requiresAuth=false] - If the request require authorization
- * @returns {Promise<Object|null>} - JSON response from API or null for DELETE.
+ * Felles funksjon for alle API-kall
+ * @param {string} endpoint - API-endepunkt
+ * @param {string} method - HTTP-metode (GET, POST, PUT, DELETE).
+ * @param {Object} [body] - Data som skal sendes med
+ * @param {boolean} [requiresAuth=false] - Om forespørselen krever autorisasjon
+ * @returns {Promise<Object>} - JSON-respons fra API-et
+ * @throws {Object} - JSON-feilobjekt fra API-et ved feil
  */
 export async function apiRequest(endpoint, method = "GET", body = null, requiresAuth = false) {
   const headers = {
@@ -27,20 +29,17 @@ export async function apiRequest(endpoint, method = "GET", body = null, requires
   }
 
   try {
-    console.log(`🚀 API Request: ${method} ${endpoint}`);
     const response = await fetch(endpoint, config);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Error ${response.status}: ${errorText || response.statusText}`);
-    }
-
     const contentType = response.headers.get("Content-Type");
-    if (contentType && contentType.includes("application/json")) {
-      return await response.json();
+    const isJson = contentType && contentType.includes("application/json");
+    const data = isJson ? await response.json() : null;
+
+    if (!response.ok) {
+      throw data || { status: response.status, message: response.statusText };
     }
 
-    return null; 
+    return data;
   } catch (error) {
     console.error("❌ API Request Error:", error);
     throw error;

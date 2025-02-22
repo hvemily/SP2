@@ -5,14 +5,12 @@ import { fetchProfile } from "./js/api/profile/read.js";
 import { showConfirmationModal } from "./js/ui/global/confirmationModal.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  console.log("🚀 App loaded, running router...");
   router(window.location.pathname);
   await updateNavigation(); 
   setupHamburgerMenu();    
 });
 
 window.addEventListener("popstate", () => {
-  console.log("🔙 Navigating back/forward...");
   router();
 });
 
@@ -89,12 +87,10 @@ function handleLogout() {
     confirmText: "Yes, log out",
     cancelText: "No, stay",
     onConfirm: () => {
-      console.log("👋 Logging out... Clearing localStorage.");
       localStorage.clear();
       window.location.href = "/";
     },
     onCancel: () => {
-      console.log("User canceled logout.");
     },
   });
 }
@@ -112,17 +108,6 @@ function setupHamburgerMenu() {
       mobileNavMenu.classList.toggle("hidden");
     });
   }
-}
-
-// Global functions for loader and alert
-export function showLoader() {
-  const loader = document.getElementById("loader");
-  if (loader) loader.classList.remove("hidden");
-}
-
-export function hideLoader() {
-  const loader = document.getElementById("loader");
-  if (loader) loader.classList.add("hidden");
 }
 
 export function showAlert(message, type = "success") {

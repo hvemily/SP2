@@ -1,9 +1,8 @@
 import { login } from "../../api/auth/login.js";
-import { hideLoader, showLoader, showAlert } from "../../../app.js";
+import { showAlert } from "../../../app.js";
 
 export async function onLogin(event) {
   event.preventDefault();
-  console.log("🟢 onLogin triggered!");
 
   const form = event.target;
   const email = form.email.value.trim();
@@ -15,9 +14,7 @@ export async function onLogin(event) {
   }
 
   try {
-    showLoader();
-
-    //Call login() functuin that returns user data (token and name)
+    // Call login() function that returns user data (token and name)
     const user = await login({ email, password });
     if (!user) return;
 
@@ -25,12 +22,12 @@ export async function onLogin(event) {
     const name = user.name;
 
     if (token && name) {
-      // Store used data and email to get credits 
+      // Store user data and email to get credits 
       localStorage.setItem("token", token);
       localStorage.setItem("name", name);
       localStorage.setItem("email", email);
 
-      //Get users credits from localstorage with a key based on email
+      // Get user's credits from localStorage with a key based on email
       const creditsKey = `credits_${email}`;
       let userCredits = localStorage.getItem(creditsKey);
       if (!userCredits) {
@@ -47,7 +44,5 @@ export async function onLogin(event) {
     }
   } catch (error) {
     showAlert(`Login failed: ${error.message}`, "error");
-  } finally {
-    hideLoader();
   }
 }
