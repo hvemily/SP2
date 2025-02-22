@@ -1,6 +1,7 @@
 import { fetchSingleListing } from "../../api/post/read.js";
 import { apiRequest } from "../../ui/utilities/apiRequest.js";
 import { showAlert } from "../../../app.js";
+import { API_LISTINGS } from "../../api/constants.js";
 
 /**
  * Hovedfunksjon: Henter listing-ID fra URL, laster data og viser i DOM.
@@ -123,7 +124,9 @@ async function handleBid(listingId, bidAmount) {
   }
 
   try {
-    await apiRequest(`/auction/listings/${listingId}/bids`, "POST", { amount: bidAmount }, true);
+    // 🔥 Bruk riktig endpoint
+    await apiRequest(`${API_LISTINGS}/${listingId}/bids`, "POST", { amount: bidAmount }, true);
+
     localStorage.setItem(creditsKey, userCredits - bidAmount);
     showAlert(`Bid Placed! Your bid of ${bidAmount} credits has been placed successfully.`, "success");
   } catch (error) {
@@ -131,6 +134,7 @@ async function handleBid(listingId, bidAmount) {
     showAlert(`Bid Error: ${error.message}`, "error");
   }
 }
+
 
 /**
  * Fetches and shows bids for listing
