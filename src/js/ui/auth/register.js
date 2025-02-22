@@ -35,11 +35,19 @@ export async function onRegister(event) {
     }, 3000);
 
   } catch (error) {
-    
-    if (error.message.includes("already exists")) {
-      showAlert("This email is already registered. Please use another email.", "error");
-    } else {
-      showAlert(`Registration failed: ${error.message}`, "error");
+    console.error("❌ Registration error:", error); 
+  
+    if (error.errors && Array.isArray(error.errors)) {
+      const firstError = error.errors[0]?.message || "An unknown error occurred.";
+  
+      if (firstError.toLowerCase().includes("already exists")) {
+        return showAlert("This email is already registered. Please use another email.", "error");
+      }
+      
+      return showAlert(`Registration failed: ${firstError}`, "error");
     }
+  
+    showAlert("An unexpected error occurred. Please try again.", "error");
   }
+  
 }
