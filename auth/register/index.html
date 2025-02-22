@@ -26,10 +26,6 @@
         <span id="alert-message"></span>
     </div>
 
-    <!-- Header -->
-    <header class="absolute top-8 text-5xl font-[Crimson] text-center w-full mt-7">
-        Vérité Auctions
-    </header>
 
     <!-- Register Form Container -->
     <main class="flex flex-col items-center justify-center flex-grow">
@@ -37,17 +33,17 @@
             <h2 class="text-xl font-medium text-center mb-4 font-[Crimson]">Register</h2>
             <form name="register" id="register-form" class="flex flex-col space-y-4" method="post">
                 <!-- Name -->
-                <input type="text" name="name" placeholder="Name"
-                    class="p-3 bg-black text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+                <input type="text" name="name" placeholder="Name" 
+                class="p-3 bg-white bg-opacity-40 text-white placeholder:text-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>         
                 <!-- Email -->
                 <input type="email" name="email" placeholder="Email"
-                    class="p-3 bg-black text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+                class="p-3 bg-white/40 text-white placeholder:text-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
                 <!-- Password -->
                 <input type="password" name="password" placeholder="Password"
-                    class="p-3 bg-black text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+                class="p-3 bg-white/40 text-white placeholder:text-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
                 <!-- Confirm Password -->
                 <input type="password" name="confirmPassword" placeholder="Confirm Password"
-                    class="p-3 bg-black text-white rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
+                class="p-3 bg-white/40 text-white placeholder:text-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-gray-300" required>
                 <button type="submit"
                     class="bg-white text-black py-2 rounded-lg font-semibold hover:bg-black hover:text-white transition">
                     Register

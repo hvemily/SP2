@@ -120,17 +120,22 @@ export function showAlert(message, type = "success") {
   }
 
   alertMessage.textContent = message;
-  alertBox.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-lg z-50 text-white ${
+  alertBox.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg z-50 text-white text-center text-sm font-medium opacity-0 transition-opacity duration-300 ${
     type === "success" ? "bg-green-500" : "bg-red-500"
   }`;
-
+  
   alertBox.classList.remove("hidden");
+  setTimeout(() => {
+    alertBox.classList.add("opacity-100");
+  }, 10); 
+  
 
   setTimeout(() => {
-    alertBox.classList.add("hidden");
+    alertBox.classList.remove("opacity-100");
+    alertBox.classList.add("opacity-0");
+  
+    setTimeout(() => {
+      alertBox.classList.add("hidden");
+    }, 300); 
   }, 3000);
 }
-
-
-
-
