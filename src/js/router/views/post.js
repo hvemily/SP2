@@ -114,7 +114,9 @@ function addBidEventListeners(listingId) {
  */
 async function handleBid(listingId, bidAmount) {
   const email = localStorage.getItem("email");
-  if (!email) return showAlert("Login Required", "You must be logged in to place a bid.", "error");
+  if (!email) {
+    return showAlert("Login Required", "You must be logged in to place a bid.", "error");
+  }
 
   const creditsKey = `credits_${email}`;
   let userCredits = Number(localStorage.getItem(creditsKey)) || 0;
@@ -124,16 +126,45 @@ async function handleBid(listingId, bidAmount) {
   }
 
   try {
-    // 🔥 Bruk riktig endpoint
-    await apiRequest(`${API_LISTINGS}/${listingId}/bids`, "POST", { amount: bidAmount }, true);
+    const response = await apiRequest(`${API_LISTINGS}/${listingId}/bids`, "POST", { amount: bidAmount }, true);
 
+    // 🔍 Sjekk om API-et returnerer feilmeldinger
+    if (response && response.errors) {
+      const errorMessages = response.errors.map(error => error.message).join(" ");
+      
+      console.log("🔎 API error messages:", errorMessages); // Debugging
+
+      if (errorMessages.includes("You do not have enough balance to bid this amount")) {
+        return showAlert("Bid Error", "You do not have enough credits to place this bid.", "error");
+      }
+
+      if (errorMessages.includes("Your bid must be higher than the current bid")) {
+        return showAlert("Bid Error", "Your bid must be higher than the current highest bid.", "error");
+      }
+
+      return showAlert("Bid Error", errorMessages, "error");
+    }
+
+    // ✅ Oppdaterer brukerens kreditter lokalt
     localStorage.setItem(creditsKey, userCredits - bidAmount);
     showAlert(`Bid Placed! Your bid of ${bidAmount} credits has been placed successfully.`, "success");
+
   } catch (error) {
-    console.error("❌ handleBid error:", error);
-    showAlert(`Bid Error: ${error.message}`, "error");
+    console.error("❌ API Bid Error:", error);
+
+    let errorMessage = "An error occurred while placing your bid. Please try again.";
+    
+    if (error.message.includes("You do not have enough balance to bid this amount")) {
+      errorMessage = "You do not have enough credits to place this bid.";
+    } else if (error.message.includes("Your bid must be higher than the current bid")) {
+      errorMessage = "Your bid must be higher than the current highest bid.";
+    }
+
+    showAlert("Bid Error", errorMessage, "error");
   }
 }
+
+
 
 
 /**

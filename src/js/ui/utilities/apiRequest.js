@@ -40,7 +40,7 @@ export async function apiRequest(endpoint, method = "GET", body = null, requires
       return await response.json();
     }
 
-    return null; // Returns null if DELETE response is empty
+    return null; 
   } catch (error) {
     console.error("❌ API Request Error:", error);
     throw error;
