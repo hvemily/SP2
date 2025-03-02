@@ -38,7 +38,7 @@ npm install
 Since this is a static frontend project, be sure to use a local server as it's made with Vite.
 
 ```bash
-npm run dev  # if using Vite or similar
+npm run dev  # using vite
 ```
 
 ## 🎨 **Design & Planning**  
@@ -74,24 +74,6 @@ This project uses the **Noroff Auction API**.
 
 ---
 
-## 🛠️ **Contributing**  
-1. **Fork** the repository  
-2. **Create a new branch**:  
-```bash
-git checkout -b feature-name
-```
-
-3. **Commit your changes:**
-```bash
-git commit -m "Added new feature"
-```
-
-4. **Push the branch:**
-```bash
-git push origin feature-name
-```
-
-5. **Open a pull request**
 
 ## 📜 **Lisence**
 This project is licensed under Noroff Educational School. 
