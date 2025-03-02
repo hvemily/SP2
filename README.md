@@ -42,8 +42,7 @@ npm run dev  # using vite
 ```
 
 ## 🎨 **Design & Planning**  
-- **Figma Prototype:** [🔗 View Design](https://www.figma.com/design/EKX2ExgJd8WplBWvkN1ZAr/V%C3%A9rit%C3%A9-Auctions?node-id=0-1&t=SsECBCN7q8iTqrh3-1)  
-- **Style Guide:** [🎨 View Style Guide](https://www.figma.com/design/EKX2ExgJd8WplBWvkN1ZAr/V%C3%A9rit%C3%A9-Auctions?node-id=0-1&t=SsECBCN7q8iTqrh3-1)  
+- **Figma Prototype & Styleguide:** [🔗 View Design](https://www.figma.com/design/EKX2ExgJd8WplBWvkN1ZAr/V%C3%A9rit%C3%A9-Auctions?node-id=0-1&t=SsECBCN7q8iTqrh3-1)   
 - **Kanban Board:** [📌 View Kanban Board](https://github.com/users/hvemily/projects/5)  
 - **Gantt Chart:** [📅 View Gantt Chart](https://github.com/users/hvemily/projects/5/views/4)
 - **Netlify hosting** [📅 View Netlify Live page](https://veriteauctions.netlify.app/)
