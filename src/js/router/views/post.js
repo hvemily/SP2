@@ -2,6 +2,7 @@ import { fetchSingleListing } from "../../api/post/read.js";
 import { apiRequest } from "../../ui/utilities/apiRequest.js";
 import { showAlert } from "../../../app.js";
 import { API_LISTINGS } from "../../api/constants.js";
+import { calculateTimeLeft } from "../../ui/utilities/timeEnds.js";
 
 /**
  * Hovedfunksjon: Henter listing-ID fra URL, laster data og viser i DOM.
@@ -69,19 +70,6 @@ function renderListingDetail(listing) {
   addBidEventListeners(listing.id, currentHighestBid);
 }
 
-/**
- * Time before auction ends
- */
-function calculateTimeLeft(endsAt) {
-  const timeLeft = new Date(endsAt) - new Date();
-  if (timeLeft <= 0) return "Expired";
-
-  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-
-  return `${days}d ${hours}h ${minutes}m left`;
-}
 
 /**
  * Event listener to handle bid

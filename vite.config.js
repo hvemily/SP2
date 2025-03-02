@@ -2,14 +2,14 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  appType: "mpa", // Multi-page Application
-  base: "", // Tom base for relativ navigasjon
+  appType: "mpa", 
+  base: "", 
   build: {
     sourcemap: true,
     target: "esnext",
     rollupOptions: {
       input: {
-        main: resolve(__dirname, "index.html"), // Hovedsiden
+        main: resolve(__dirname, "index.html"), 
         login: resolve(__dirname, "auth/login/index.html"),
         register: resolve(__dirname, "auth/register/index.html"),
         profile: resolve(__dirname, "profile/index.html"),

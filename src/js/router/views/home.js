@@ -1,5 +1,6 @@
 // src/js/router/views/home.js
 import { fetchListings, fetchFeaturedBids } from "../../api/post/read.js";
+import { calculateTimeLeft } from "../../ui/utilities/timeEnds.js";
 
 let currentPage = 0;
 const postsPerPage = 8;
@@ -106,23 +107,6 @@ function createListingCard({ id, title, description, seller, bids, media, endsAt
       </div>
     </a>
   `;
-}
-
-//Time before listing ends
-function calculateTimeLeft(endsAt) {
-  if (!endsAt) return "No end date";
-  
-  const now = new Date();
-  const endDate = new Date(endsAt);
-  const timeLeft = endDate - now;
-
-  if (timeLeft <= 0) return "Expired";
-
-  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-
-  return `${days}d ${hours}h ${minutes}m left`;
 }
 
 // Search function

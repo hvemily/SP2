@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     screens: {
       sm: "640px",
-      md: "970px", // ⬅️ overskriver Tailwinds default
+      md: "970px", 
       lg: "1024px",
       xl: "1280px",
       "2xl": "1536px",
