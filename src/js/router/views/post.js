@@ -5,7 +5,7 @@ import { API_LISTINGS } from "../../api/constants.js";
 import { calculateTimeLeft } from "../../ui/utilities/timeEnds.js";
 
 /**
- * Entry: Hent listing-ID fra URL, last data og render.
+ * Entry: Get listing ID from URL, load data and render
  */
 export default async function initListingDetail() {
   const listingId = new URLSearchParams(window.location.search).get("id");
@@ -30,7 +30,7 @@ export default async function initListingDetail() {
 }
 
 /* =========================
-   Render detaljside
+  Rendering detail page
    ========================= */
 function renderListingDetail(listing) {
   const container = document.getElementById("category-listings");
@@ -222,13 +222,13 @@ function wireViewBids(listingId) {
 }
 
 /* =========================
-   Budhåndtering
+   Bid handling
    ========================= */
 function addBidEventListeners(listingId, currentHighestBid) {
   const form = document.getElementById("bidForm");
   if (!form) return;
 
-  // Sikre at vi ikke dobbel-registrerer lyttere ved re-render
+  // Make sure we don't double register listeners with re-rendering
   const clone = form.cloneNode(true);
   form.parentNode.replaceChild(clone, form);
   const f = document.getElementById("bidForm");
@@ -255,8 +255,8 @@ function addBidEventListeners(listingId, currentHighestBid) {
 }
 
 /**
- * Send bud til API + enkel localStorage-kredittoppdatering
- * NB: Beholder din eksisterende signatur for apiRequest(url, method, body, auth)
+ * Send bid to API + simple localStorage credit update
+ * NB: keeps you existing signature for apiReqquest (url, method, body, auth)
  */
 async function handleBid(listingId, bidAmount) {
   const email = localStorage.getItem("email");
@@ -273,13 +273,13 @@ async function handleBid(listingId, bidAmount) {
 
   await apiRequest(`${API_LISTINGS}/${listingId}/bids`, "POST", { amount: bidAmount }, true);
 
-  // Oppdater lokalt for snappy UI
+  // Update locally for snappy UI
   localStorage.setItem(creditsKey, String(userCredits - bidAmount));
   return true;
 }
 
 /* =========================
-   Hent og vis budhistorikk
+   Get and view bidding history
    ========================= */
 async function showBids(listingId) {
   const bidsContainer = document.getElementById("bids-container");

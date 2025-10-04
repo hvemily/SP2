@@ -2,7 +2,7 @@
 import { API_KEY, API_BASE } from "../../api/constants";
 
 /**
- * Felles funksjon for alle API-kall
+ * Joint function for all API calls
  */
 export async function apiRequest(endpoint, method = "GET", body = null, requiresAuth = false) {
   const headers = {
@@ -15,7 +15,7 @@ export async function apiRequest(endpoint, method = "GET", body = null, requires
     if (token) headers.Authorization = `Bearer ${token}`;
   }
 
-  // ⬇️ Make absolute URL
+  // Make absolute URL
   const url =
     /^https?:\/\//i.test(endpoint)
       ? endpoint

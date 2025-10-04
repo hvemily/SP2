@@ -1,5 +1,5 @@
 /**
- * Viser en gjenbrukbar bekreftelsesmodal.
+ * SHowing a reusable confirmation modal
  *
  * @param {Object} options - Configuration object for modal
  * @param {string} options.title - Title in Modal
@@ -26,7 +26,7 @@ export function showConfirmationModal({
   titleEl.textContent = title;
   messageEl.textContent = message;
 
-  // Oppdater knappetekster
+  // Updating button texts
   confirmBtn.textContent = confirmText;
   cancelBtn.textContent = cancelText;
 

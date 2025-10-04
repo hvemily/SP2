@@ -3,18 +3,17 @@ import { API_BASE } from "../../api/constants.js";
 
 /** ---- Helpers for smarter matching ---- **/
 
-// Basic plural/singular helpers (simple English rules good enough for portfolio)
 function singularize(s) {
   if (!s) return s;
-  if (s.endsWith("es")) return s.slice(0, -2); // e.g., watches -> watch
-  if (s.endsWith("s")) return s.slice(0, -1);  // cats -> cat
+  if (s.endsWith("es")) return s.slice(0, -2); 
+  if (s.endsWith("s")) return s.slice(0, -1);
   return s;
 }
 function pluralize(s) {
   if (!s) return s;
   if (s.endsWith("s")) return s;
-  if (/(ch|sh|x|z)$/.test(s)) return s + "es"; // watch -> watches
-  return s + "s"; // cat -> cats
+  if (/(ch|sh|x|z)$/.test(s)) return s + "es";
+  return s + "s";
 }
 
 function normalizeText(t) {
@@ -25,15 +24,16 @@ function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-// Optional alias-map per kategori. Legg til flere ved behov.
+// Optional alias map per category
 const CATEGORY_ALIASES = {
   watch: ["watch", "watches", "wristwatch", "timepiece"],
   vintage: ["vintage", "retro", "classic", "old-school", "old school"],
-  // sneaker: ["sneaker", "sneakers", "trainers", "shoes"],
-  // bag: ["bag", "bags", "handbag", "purse"],
+  art: ["painting", "watercolour", "acrylic", "wall art", "wallart", "picture", "art"],
+  fashion: ["clothing", "clothes", "shoes", "shirt", "dress", "suit", "hat"],
+  collectibles: ["watch", "watches", "ring", "toy", "telephoe", "glasses"],
+  jewelry: ["necklace", "earrings", "ring", "rings", "bracelet", "earstuds"],
 };
 
-// Lag en liste med søkenåler (entall, flertall + alias)
 function buildNeedles(category) {
   const base = normalizeText(category);
   const needles = new Set([base, singularize(base), pluralize(base)]);
@@ -46,7 +46,6 @@ function buildNeedles(category) {
   return Array.from(needles).filter(Boolean);
 }
 
-// Match med ordgrenser i fritekst (title/description)
 function textHasAnyWord(text, needles) {
   const norm = normalizeText(text);
   return needles.some((n) => {
@@ -55,7 +54,6 @@ function textHasAnyWord(text, needles) {
   });
 }
 
-// Tags kan være “smartwatch”, “vintage-watch” osv. – vær litt løsere her:
 function tagsHaveAny(tags, needles) {
   if (!Array.isArray(tags)) return false;
   return tags.some((tag) => {
