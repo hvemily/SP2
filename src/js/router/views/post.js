@@ -228,27 +228,31 @@ function addBidEventListeners(listingId, currentHighestBid) {
   const form = document.getElementById("bidForm");
   if (!form) return;
 
-  form.addEventListener("submit", async (event) => {
+  // Sikre at vi ikke dobbel-registrerer lyttere ved re-render
+  const clone = form.cloneNode(true);
+  form.parentNode.replaceChild(clone, form);
+  const f = document.getElementById("bidForm");
+
+  f.addEventListener("submit", async (event) => {
     event.preventDefault();
     const input = document.getElementById("bidAmount");
     const bidAmount = Number(input?.value);
     const highestBid = Number(currentHighestBid);
 
     if (isNaN(bidAmount) || bidAmount <= 0 || bidAmount <= highestBid) {
-      return showAlert("Invalid Bid", `Your bid must be higher than the current highest bid (${highestBid} credits).`, "error");
+      return showAlert(`Invalid Bid: Your bid must be higher than the current highest bid (${highestBid} credits).`, "error");
     }
 
     try {
       await handleBid(listingId, bidAmount);
       await initListingDetail(); // re-render
-      showAlert("Success", `Your bid of ${bidAmount} credits has been placed successfully.`, "success");
+      showAlert(`Your bid of ${bidAmount} credits has been placed successfully.`, "success");
     } catch (error) {
       const msg = error?.errors?.[0]?.message || "An error occurred while placing your bid. Please try again.";
-      showAlert("Bid Error", msg, "error");
+      showAlert(msg, "error");
     }
-  });
+  }, { once: true });
 }
-
 
 /**
  * Send bud til API + enkel localStorage-kredittoppdatering
@@ -257,25 +261,22 @@ function addBidEventListeners(listingId, currentHighestBid) {
 async function handleBid(listingId, bidAmount) {
   const email = localStorage.getItem("email");
   if (!email) {
-    return showAlert("Login Required", "You must be logged in to place a bid.", "error");
+    return showAlert("You must be logged in to place a bid.", "error");
   }
 
   const creditsKey = `credits_${email}`;
   const userCredits = Number(localStorage.getItem(creditsKey)) || 0;
 
   if (bidAmount > userCredits) {
-    return showAlert("Insufficient Credits", `Not enough credits! You only have ${userCredits} credits.`, "error");
+    return showAlert(`Not enough credits! You only have ${userCredits} credits.`, "error");
   }
 
   await apiRequest(`${API_LISTINGS}/${listingId}/bids`, "POST", { amount: bidAmount }, true);
 
   // Oppdater lokalt for snappy UI
   localStorage.setItem(creditsKey, String(userCredits - bidAmount));
-
-  // ⬅️ IKKE showAlert her – la caller vise success
   return true;
 }
-
 
 /* =========================
    Hent og vis budhistorikk
@@ -310,8 +311,6 @@ async function showBids(listingId) {
     bidsContainer.innerHTML = `<p class='text-red-500'>Failed to load bids.</p>`;
   }
 }
-
-
 
 /* =========================
    Ikoner (inline SVG)
