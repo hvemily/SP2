@@ -37,18 +37,6 @@ Vérité Auctions is a simple auction site built as part of the Noroff Frontend 
 
 ---
 
-## 🖼️ Screenshots
-
-> Add 2–3 screenshots or a short GIF here (Home, Listing detail, Create listing).  
-> Store them under `public/readme/` and reference like below.
-
-```
-![Home](public/readme/home.png)
-![Listing detail](public/readme/detail.png)
-```
-
----
-
 ## 🚀 Getting started
 
 ```bash
