@@ -1,6 +1,5 @@
 // src/js/router/index.js
 
-// Vite samler alle view-moduler her: path => () => import('...')
 const views = import.meta.glob("./views/*.js");
 
 export default async function router(pathname = window.location.pathname) {
@@ -63,7 +62,7 @@ export default async function router(pathname = window.location.pathname) {
   }
 }
 
-// Laster modul via glob-map (ikke direkte import(modulePath) som blir 404/MIME i prod)
+// Loading module via glob map (not direct import(modulePath) that gets 404/MIME in prod)
 async function loadPage(modulePath, { returnModule = false } = {}) {
   const importer = views[modulePath];
   if (!importer) {
