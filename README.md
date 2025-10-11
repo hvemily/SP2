@@ -1,173 +1,124 @@
 # Vérité Auctions — Semester Project 2
 
-[![Netlify](https://img.shields.io/badge/Netlify-deployed-00C7B7?logo=netlify)](https://veriteauctions.netlify.app/)
-![Vite](https://img.shields.io/badge/Vite-MPA-646CFF?logo=vite)
-![Tailwind](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?logo=tailwindcss)
+An auction marketplace built for the Noroff **Semester Project 2**. Users can register, log in, create listings, upload an avatar, place bids, and browse/search active auctions. Unauthenticated users can still discover listings, but authoring actions require an account.
 
-Vérité Auctions is a simple auction site built as part of the Noroff Frontend **Semester Project 2**.  
-
-
-> **Live site:** https://veriteauctions.netlify.app/
+> **Live demo:** _(add your deployed link here)_  
+> **Repository:** https://github.com/hvemily/SP2
 
 ---
 
 ## ✨ Features
 
-- Sign up (required domain: `@stud.noroff.no`)
-- Login / logout + display **available credits**
-- Update avatar
-- Create new auctions (title, description, media, tags, end time)
-- **Bid on other users’ listings** and view bid history
-- Search & browse public listings (no auth required)
-- Category page with **smart matching** (singular/plural & simple aliases, e.g. `watch` ⇄ `watches`)
-- Polished UI
-  - Modern cards (aspect ratio, hover, badges, line-clamp)
-  - Listing detail with gallery thumbnails and time-left badge
+- **Auth**: Register, log in/out, persisted session
+- **Profile**: View credits, update profile avatar
+- **Listings**: Create listings with title, description, media, and end date
+- **Bidding**: Place bids on active listings
+- **Browse**: Search and filter listings; view single-listing detail
+- **Responsive UI**: Mobile-first layout with accessible focus states
+- **Error handling**: Friendly messages for failed network calls and validation
 
 ---
 
-## 🧱 Tech stack
+## 🧱 Tech Stack
 
-- **Vite** (multi‑page, ES modules)
-- **Tailwind CSS**
-- **Vanilla JS**
-- **Noroff Auction API**
-- **Netlify** (hosting)
-- Figma (design planning)
+- **Vite** (dev server & build)
+- **Vanilla JavaScript (ES Modules)**
+- **HTML5** & **CSS** (utility-first **framework** styling)
+- **Tailwind CSS** (configured via PostCSS) *(if applicable in this repo)*
+
+> See `package.json`, `postcss.config.js`, and `tailwind.config.js` for setup.
 
 ---
 
-## 🚀 Getting started
+## 📦 Getting Started
 
 ```bash
-git clone https://github.com/hvemily/SP2.git
-cd SP2
+# 1) Install dependencies
 npm install
+
+# 2) Start dev server
 npm run dev
-```
 
-**Build & preview**
-
-```bash
+# 3) Build for production
 npm run build
+
+# 4) Preview local production build
 npm run preview
 ```
 
----
-
-## ⚙️ Configuration
-
-Constants are defined in `src/js/api/constants.js` (API base and endpoints).  
-If you prefer environment variables with Vite, add a `.env` file at the project root:
-
-```
-VITE_API_BASE=https://v2.api.noroff.dev
-# Optional API key if you use one:
-VITE_NOROFF_API_KEY=your_api_key_here
-```
-
-Then read them from `constants.js` via `import.meta.env.VITE_API_BASE` (etc.).
-
-**Authentication**  
-- After login, an `accessToken` (JWT) is stored in `localStorage` and sent as `Authorization: Bearer <token>` where required.
-- Credits can be displayed from the user profile endpoint.
+The app typically runs on **http://localhost:5173** in development.
 
 ---
 
-## 🔌 API notes
+## 🔗 API
 
-- **Base:** `https://v2.api.noroff.dev`
-- **Listings:** `GET /auction/listings?…`
-- **Single listing:** `GET /auction/listings/{id}?_bids=true&_seller=true`
-- **Create listing:** `POST /auction/listings`
-- **Place bid:** `POST /auction/listings/{id}/bids`
-- **Bid history:** fetched via the single‑listing endpoint using `?_bids=true`  
-  (there is no separate `GET /bids` route).
+This project integrates with the **Noroff Auction API** (v2).  
+You will need a valid registered user to access authenticated endpoints for creating listings and placing bids.
 
----
+- Base: `https://v2.api.noroff.dev`  
+- Listings: `/auction/listings`  
+- Profiles: `/auction/profiles/{name}`  
+- Bids: `/auction/listings/{id}/bids`
 
-## 🗂 Project structure
-
-```
-SP2/
-├─ auth/                      # login/register HTML
-├─ listing/                   # listing index/create/edit/category HTML
-├─ profile/                   # profile HTML
-├─ public/                    # static assets (put README images here)
-├─ src/
-│  ├─ app.js                  # app init, alerts, etc.
-│  ├─ js/
-│  │  ├─ api/                 # API helpers (read/create/etc.)
-│  │  ├─ router/              # router + views (lazy‑loaded)
-│  │  └─ ui/                  # UI utilities/components
-│  └─ assets/                 # icons, images
-├─ netlify.toml               # build (npm run build), publish (dist)
-├─ vite.config.js             # base: "/"
-└─ index.html
-```
+> Tokens are stored client-side for authenticated requests.
 
 ---
 
-## 🛠 Implementation notes
+## 🗺️ Core Routes
 
-- **Routing:** uses `import.meta.glob("./views/*.js")` for safe, production‑ready lazy loading.  
-  This avoids MIME‑type errors from direct `import(modulePath)` on Netlify builds.
-- **Cards (home/featured):** aspect‑ratio media, subtle hover‑scale, time badge, line‑clamp text.
-- **Category search:** tolerant matching for singular/plural and simple aliases to reduce false negatives.
-- **Listing detail:** gallery thumbnails, color‑coded time‑left badge, improved bid flow.
-- **Strict MIME fix:** `vite.config.js` sets `base: "/"` so assets resolve correctly in production.
-
----
-
-## ♿ Accessibility & QA
-
-- Semantic headings and buttons with appropriate `aria-label`s where needed
-- Keyboard navigation tested on core flows (login, create, bid)
-- Contrast checked for primary/secondary states
-- Basic performance pass:
-  - `loading="lazy"` on non-critical images
-  - Reduced layout shift in cards
+- `/` – Home (latest/active listings, search)
+- `/login` – Log in
+- `/register` – Register new user
+- `/profile` – Profile (avatar + credits)
+- `/listings/create` – Create a new listing
+- `/listings/:id` – Listing detail + bid UI
 
 ---
 
-## 🚢 Deploy (Netlify)
+## ♿ Accessibility & UX
 
-- **Build command:** `npm run build`
-- **Publish directory:** `dist/`
-
-`netlify.toml` (included) handles the build and SPA routing:
-
-```toml
-[build]
-  command = "npm run build"
-  publish = "dist"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-```
+- Semantic HTML and labelled controls
+- Keyboard-friendly navigation with visible focus
+- Reduced layout shift (image aspect-ratio set)
+- Color contrast checked for interactive elements
+- Clear validation errors, toast/alert semantics
 
 ---
 
-## ✅ Requirements checklist
+## 🛠️ Development Notes
 
-- Uses an approved CSS framework (**Tailwind CSS**)
-- Hosted on an approved platform (**Netlify**)
-- Follows Noroff Auction API constraints
-- Links to design/planning assets (Figma / Kanban)
-
----
-
-## 🧭 Roadmap / Improvements
-
-- Server‑side pagination for search results
-- Stronger validation on “Create listing” (URL, end date in the future)
-- 404/empty states with small illustrations
+- **State & Data**: Simple module state with fetch wrappers and defensive parsing
+- **Images**: Prefer optimized images ≤ **200KB** (portfolio requirement)
+- **Env**: Public API base can be centralized (e.g., `src/constants/api.js`)
+- **Build**: Static output suitable for Netlify/Vercel
 
 ---
 
-## 📄 License
+## ✅ Assignment Checklist
 
-MIT © 2025 Emily — see `LICENSE` for details.  
-> Educational project; provided as‑is.
+- [x] Public GitHub repository
+- [x] Live deployment _(add link)_
+- [x] README with setup, features, and routes
+- [x] Ability to register, log in, update avatar
+- [x] Create listings and place bids
+- [x] Browse and search listings
+- [x] Responsive, accessible UI
+
+---
+
+## 📸 Screenshots (optional)
+
+_Add 1–2 lightweight screenshots (≤ 200KB each) to showcase the UI._
+
+---
+
+## 👩‍💻 Author
+
+**Emily Brynestad** – Frontend Developer & Visual Designer  
+Portfolio: https://emilybrynestad.netlify.app
+
+---
+
+## 🪪 License
+
+This project is made under the license of **Noroff School of Technology and Digital Media** (educational use).
